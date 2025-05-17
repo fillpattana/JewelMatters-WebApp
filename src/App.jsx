@@ -1,13 +1,11 @@
-import Home from "./pages/Home.jsx";
-import PromptPayQR from "./components/PromptPayQR.jsx";
+import Home from "./employee-pages/CreateSlip.jsx";
+import CreateSlip from "./components/PromptPayQR.jsx";
 import "./styles/App.css";
 
 function App() {
   return (
     <>
-      <Home />
-      {/* <PromptPayQR /> */}
-      //
+      <CreateSlip />
     </>
   );
 }

@@ -10,7 +10,7 @@ export default function PromptPayQR() {
 
   const generateQR = async () => {
     if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
-      alert("Please enter a valid amount.");
+      alert("กรุณา ระบุจำนวนเงินที่ถูกต้อง");
       return;
     }
 
