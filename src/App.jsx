@@ -6,8 +6,8 @@ import "./styles/App.css";
 function App() {
   return (
     <>
-      {/* <LineLogin /> */}
-      <CreateSlip />
+      <LineLogin />
+      {/* <CreateSlip /> */}
     </>
   );
 }

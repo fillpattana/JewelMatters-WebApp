@@ -7,7 +7,7 @@ export default function App() {
   const [error, setError] = useState(null);
 
   // const liffId = import.meta.env.VITE_LIFF_ID;
-  const liffId = "2007349369-nPoMqVky";
+  const liffId = "2007432282-9yjvqGGr";
 
   useEffect(() => {
     initLiff(liffId)
