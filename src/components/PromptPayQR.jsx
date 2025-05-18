@@ -44,7 +44,7 @@ export default function PromptPayQR() {
           />
           <button
             onClick={generateQR}
-            className="bg-green-500 text-white p-2 rounded w-full"
+            className="bg-red-500 text-white p-2 rounded w-full"
           >
             ยืนยัน
           </button>
