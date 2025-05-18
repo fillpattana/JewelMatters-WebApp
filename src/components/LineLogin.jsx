@@ -34,7 +34,7 @@ export default function App() {
 
   /* ---------- UI ---------- */
   if (error) return <p style={{ color: "red" }}>{error}</p>;
-  if (!profile) return <p>Loading LIFF…</p>;
+  if (!profile) return <p>ระบบกำลังตรวจสอบ ความถูกต้อง...</p>;
 
   return (
     <main style={{ textAlign: "center", padding: "2rem" }}>
