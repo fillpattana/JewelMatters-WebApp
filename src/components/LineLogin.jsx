@@ -6,7 +6,8 @@ export default function App() {
   const [idToken, setIdToken] = useState(null);
   const [error, setError] = useState(null);
 
-  const liffId = import.meta.env.VITE_LIFF_ID;
+  // const liffId = import.meta.env.VITE_LIFF_ID;
+  const liffId = "2007349369-nPoMqVky";
 
   useEffect(() => {
     initLiff(liffId)
