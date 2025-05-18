@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { initLiff, liff } from "./liff";
+import { initLiff, liff } from "../liff";
 
 export default function App() {
   const [profile, setProfile] = useState(null);
