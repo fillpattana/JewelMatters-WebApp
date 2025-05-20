@@ -7,7 +7,7 @@ export default function LineLogin() {
   const [error, setError] = useState(null);
 
   // const liffId = import.meta.env.VITE_LIFF_ID;
-  const liffId = "2007432322-28GaXP7g";
+  const liffId = "2007432322-Lamoy70b";
 
   useEffect(() => {
     initLiff(liffId)
