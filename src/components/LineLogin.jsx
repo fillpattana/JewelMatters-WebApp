@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { initLiff, liff } from "../liff";
 
-export default function App() {
+export default function LineLogin() {
   const [profile, setProfile] = useState(null);
   const [idToken, setIdToken] = useState(null);
   const [error, setError] = useState(null);
