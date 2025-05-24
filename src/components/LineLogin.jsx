@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { initLiff, liff } from "../liff";
-import { assignUserMenu } from "../api"; // Make sure path is correct
+import { assignUserMenu } from "../api/assignUserMenu";
 
 export default function LineLogin() {
   const [profile, setProfile] = useState(null);
