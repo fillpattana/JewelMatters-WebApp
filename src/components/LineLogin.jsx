@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { initLiff, liff } from "../liff";
+import { assignUserMenu } from "../api"; // Make sure path is correct
 
 export default function LineLogin() {
   const [profile, setProfile] = useState(null);
   const [idToken, setIdToken] = useState(null);
   const [error, setError] = useState(null);
 
-  // const liffId = import.meta.env.VITE_LIFF_ID;
   const liffId = "2007432322-Lamoy70b";
 
   useEffect(() => {
@@ -26,6 +26,26 @@ export default function LineLogin() {
       })
       .catch((err) => setError(err.message));
   }, []);
+
+  // Assign menu once profile is available
+  useEffect(() => {
+    if (!profile) return;
+
+    const assignMenu = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:3001/api/getUserRole/${profile.userId}`
+        );
+        const { role } = await res.json();
+
+        await assignUserMenu(profile.userId, role);
+      } catch (err) {
+        console.error("Error assigning menu:", err);
+      }
+    };
+
+    assignMenu();
+  }, [profile]);
 
   const logout = () => {
     liff.logout();
