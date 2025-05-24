@@ -2,6 +2,7 @@ import { BrowserRouter, useSearchParams } from "react-router-dom";
 import LineLogin from "./components/LineLogin.jsx";
 import CreateSlip from "./employee-pages/CreateSlip.jsx";
 import Home from "../src/employee-pages/Home.jsx";
+import CreateNewProduct from "./storeowner-pages/CreateNewProduct.jsx";
 import "./styles/App.css";
 
 function PageRouter() {
@@ -11,6 +12,7 @@ function PageRouter() {
   const pages = {
     createslip: <CreateSlip />,
     linelogin: <LineLogin />,
+    createnewproduct: <CreateNewProduct />,
   };
 
   return pages[page] || <Home />; // fallback to <Home /> if page is not recognized
