@@ -1,12 +1,15 @@
 export const resetMenu = async (userId) => {
   try {
-    const response = await fetch("http://localhost:3001/api/resetMenu", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId }),
-    });
+    const response = await fetch(
+      "https://jewelmatters-backend-cold-fog-2174.fly.dev/api/resetMenu",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      }
+    );
 
     if (response.ok) {
       console.log("Menu reset successfully.");

@@ -34,7 +34,7 @@ export default function LineLogin() {
     const assignMenu = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/getUserRole/${profile.userId}`
+          `https://jewelmatters-backend-cold-fog-2174.fly.dev/api/getUserRole/${profile.userId}`
         );
         const { role } = await res.json();
         console.log("User role:", role);
