@@ -29,15 +29,15 @@ export default function LineLogin() {
 
   // Assign menu once profile is available
   useEffect(() => {
+    console.log("Line Login Called");
     if (!profile) return;
-
     const assignMenu = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3001/api/getUserRole/${profile.userId}`
+          `http://localhost:3000/api/getUserRole/${profile.userId}`
         );
         const { role } = await res.json();
-
+        console.log("User role:", role);
         await assignUserMenu(profile.userId, role);
       } catch (err) {
         console.error("Error assigning menu:", err);
