@@ -20,6 +20,3 @@ export const assignUserMenu = async (userId, role) => {
     console.error("Error during assignUserMenu:", error);
   }
 };
-const res = await fetch(
-  `https://jewelmatters.fly.dev/api/getUserRole/${profile.userId}`
-);
