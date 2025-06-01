@@ -1,5 +1,6 @@
 // components/LineLogin.jsx
 import { useRole } from "../react-contexts/RoleContexts";
+import { useEffect } from "react";
 import { liff } from "../liff";
 import { resetMenu } from "../api/resetUserMenu"; // make sure the path is correct
 
