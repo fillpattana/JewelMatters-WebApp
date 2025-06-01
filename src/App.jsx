@@ -8,6 +8,7 @@ import CreateNewProduct from "./storeowner-pages/CreateNewProduct.jsx";
 import StartSalePeriod from "./storeowner-pages/StartSalePeriod.jsx";
 import ViewSales from "./storeowner-pages/ViewSales.jsx";
 import WorkShift from "./employee-pages/WorkShift.jsx";
+import { useRole } from "./react-contexts/RoleContexts.jsx";
 import "./styles/App.css";
 
 function PageRouter() {
