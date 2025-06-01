@@ -1,4 +1,6 @@
 import { BrowserRouter, useSearchParams } from "react-router-dom";
+import NavBarEmployee from "./components/NavBarEmployee.jsx";
+import NavBarOwner from "./components/NavBarOwner.jsx";
 import LineLogin from "./components/LineLogin.jsx";
 import CreateSlip from "./employee-pages/CreateSlip.jsx";
 import Home from "./Home.jsx";
@@ -13,21 +15,32 @@ function PageRouter() {
   const page = params.get("page");
 
   const pages = {
-    createslip: <CreateSlip />,
+    //common pages
     linelogin: <LineLogin />,
+    //employee pages
+    createslip: <CreateSlip />,
+    workshift: <WorkShift />,
+    //owner pages
     createnewproduct: <CreateNewProduct />,
     startsaleperiod: <StartSalePeriod />,
     viewsales: <ViewSales />,
-    workshift: <WorkShift />,
   };
 
-  return pages[page] || <Home />; // fallback to <Home /> if page is not recognized
+  return pages[page] || <Home />;
 }
 
 function App() {
+  const { role } = useRole();
+
   return (
     <BrowserRouter>
-      <PageRouter />
+      <div className="app-container">
+        {role === "employee" && <NavBarEmployee />}
+        {role === "owner" && <NavBarOwner />}
+        <div className="page-content">
+          <PageRouter />
+        </div>
+      </div>
     </BrowserRouter>
   );
 }

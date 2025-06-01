@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { initLiff, liff } from "../liff";
 import { assignUserMenu } from "../api/assignUserMenu";
+import { useRole } from "../react-contexts/RoleContexts";
 
 export default function LineLogin() {
   const [profile, setProfile] = useState(null);
   const [idToken, setIdToken] = useState(null);
   const [error, setError] = useState(null);
+  const { setRole } = useRole();
 
   const liffId = "2007432322-Lamoy70b";
 
@@ -38,6 +40,13 @@ export default function LineLogin() {
         );
         const { role } = await res.json();
         console.log("User role:", role);
+        setRole(role);
+        console.log(
+          "Assigning menu for user:",
+          profile.userId,
+          "with role:",
+          role
+        );
         await assignUserMenu(profile.userId, role);
       } catch (err) {
         console.error("Error assigning menu:", err);
