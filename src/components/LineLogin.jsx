@@ -1,69 +1,17 @@
-import { useEffect, useState } from "react";
-import { initLiff, liff } from "../liff";
-import { assignUserMenu } from "../api/assignUserMenu";
+// components/LineLogin.jsx
 import { useRole } from "../react-contexts/RoleContexts";
+import { liff } from "../liff";
 
 export default function LineLogin() {
-  const [profile, setProfile] = useState(null);
-  const [idToken, setIdToken] = useState(null);
-  const [error, setError] = useState(null);
-  const { setRole } = useRole();
-
-  const liffId = "2007432322-Lamoy70b";
-
-  useEffect(() => {
-    initLiff(liffId)
-      .then(() => {
-        if (!liff.isLoggedIn()) {
-          liff.login(); // redirect to LINE login
-          return;
-        }
-
-        setIdToken(liff.getIDToken());
-
-        liff
-          .getProfile()
-          .then((p) => setProfile(p))
-          .catch((err) => setError(err.message));
-      })
-      .catch((err) => setError(err.message));
-  }, []);
-
-  // Assign menu once profile is available
-  useEffect(() => {
-    console.log("Line Login Called");
-    if (!profile) return;
-    const assignMenu = async () => {
-      try {
-        const res = await fetch(
-          `https://jewelmatters-backend-cold-fog-2174.fly.dev/api/getUserRole/${profile.userId}`
-        );
-        const { role } = await res.json();
-        console.log("User role:", role);
-        setRole(role);
-        console.log(
-          "Assigning menu for user:",
-          profile.userId,
-          "with role:",
-          role
-        );
-        await assignUserMenu(profile.userId, role);
-      } catch (err) {
-        console.error("Error assigning menu:", err);
-      }
-    };
-
-    assignMenu();
-  }, [profile]);
+  const { profile, role, loading } = useRole();
 
   const logout = () => {
     liff.logout();
     window.location.reload();
   };
 
-  /* ---------- UI ---------- */
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
-  if (!profile) return <p>ระบบกำลังตรวจสอบ ความถูกต้อง...</p>;
+  if (loading) return <p>กำลังโหลดข้อมูลผู้ใช้...</p>;
+  if (!profile) return <p>ไม่พบข้อมูลผู้ใช้</p>;
 
   return (
     <main style={{ textAlign: "center", padding: "2rem" }}>
@@ -78,32 +26,20 @@ export default function LineLogin() {
         }}
       />
       <h1>{profile.displayName}</h1>
-      {profile.statusMessage && <p>{profile.statusMessage}</p>}
-
-      <pre
-        style={{
-          background: "#f5f5f5",
-          padding: "1rem",
-          maxWidth: 400,
-          margin: "1rem auto",
-          overflowX: "auto",
-        }}
-      >
-        {JSON.stringify({ idToken, userId: profile.userId }, null, 2)}
-      </pre>
+      <p>บทบาท: {role}</p>
 
       <button
         onClick={logout}
         style={{
           padding: "0.5rem 1.5rem",
           borderRadius: 6,
-          background: "#06C755", // LINE-green
+          background: "#06C755",
           color: "#fff",
           border: "none",
           cursor: "pointer",
         }}
       >
-        Logout
+        ออกจากระบบ
       </button>
     </main>
   );
