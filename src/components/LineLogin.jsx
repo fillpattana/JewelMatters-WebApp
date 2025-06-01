@@ -6,6 +6,8 @@ export default function LineLogin() {
   const { profile, role, loading } = useRole();
 
   const logout = () => {
+    localStorage.removeItem("role");
+    localStorage.removeItem("profile");
     liff.logout();
     window.location.reload();
   };

@@ -6,8 +6,11 @@ import { assignUserMenu } from "../api/assignUserMenu";
 const RoleContext = createContext();
 
 export const RoleProvider = ({ children }) => {
-  const [role, setRole] = useState(null);
-  const [profile, setProfile] = useState(null);
+  const [role, setRole] = useState(() => localStorage.getItem("role"));
+  const [profile, setProfile] = useState(() => {
+    const storedProfile = localStorage.getItem("profile");
+    return storedProfile ? JSON.parse(storedProfile) : null;
+  });
   const [loading, setLoading] = useState(true);
 
   const liffId = "2007432322-Lamoy70b";
@@ -24,6 +27,7 @@ export const RoleProvider = ({ children }) => {
 
         const userProfile = await liff.getProfile();
         setProfile(userProfile);
+        localStorage.setItem("profile", JSON.stringify(userProfile));
 
         const res = await fetch(
           `https://jewelmatters-backend-cold-fog-2174.fly.dev/api/getUserRole/${userProfile.userId}`
@@ -31,6 +35,7 @@ export const RoleProvider = ({ children }) => {
         const { role } = await res.json();
 
         setRole(role);
+        localStorage.setItem("role", role);
         await assignUserMenu(userProfile.userId, role);
       } catch (err) {
         console.error("Error fetching user role:", err);
@@ -39,7 +44,12 @@ export const RoleProvider = ({ children }) => {
       }
     };
 
-    fetchUserRole();
+    // Only fetch if role or profile isn't already set
+    if (!role || !profile) {
+      fetchUserRole();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   return (
