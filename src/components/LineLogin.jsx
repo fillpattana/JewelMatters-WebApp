@@ -1,19 +1,33 @@
 // components/LineLogin.jsx
 import { useRole } from "../react-contexts/RoleContexts";
 import { liff } from "../liff";
+import { resetMenu } from "../api/resetUserMenu"; // make sure the path is correct
 
 export default function LineLogin() {
   const { profile, role, loading } = useRole();
 
-  const logout = () => {
-    localStorage.removeItem("role");
-    localStorage.removeItem("profile");
+  const logout = async () => {
+    if (profile?.userId) {
+      await resetMenu(profile.userId);
+    }
     liff.logout();
+    localStorage.clear(); // optional: clear localStorage too
     window.location.reload();
   };
 
   if (loading) return <p>กำลังโหลดข้อมูลผู้ใช้...</p>;
   if (!profile) return <p>ไม่พบข้อมูลผู้ใช้</p>;
+
+  useEffect(() => {
+    if (!loading && role && profile?.userId) {
+      // Give it a short delay in case the user sees the avatar briefly
+      const timeout = setTimeout(() => {
+        liff.closeWindow();
+      }, 2000); // optional: 1 second delay
+
+      return () => clearTimeout(timeout);
+    }
+  }, [loading, role, profile]);
 
   return (
     <main style={{ textAlign: "center", padding: "2rem" }}>
