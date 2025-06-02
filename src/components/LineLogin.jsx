@@ -7,14 +7,14 @@ import { resetMenu } from "../api/resetUserMenu"; // make sure the path is corre
 export default function LineLogin() {
   const { profile, role, loading } = useRole();
 
-  const logout = async () => {
-    if (profile?.userId) {
-      await resetMenu(profile.userId);
-    }
-    liff.logout();
-    localStorage.clear(); // optional: clear localStorage too
-    window.location.reload();
-  };
+  // const logout = async () => {
+  //   if (profile?.userId) {
+  //     await resetMenu(profile.userId);
+  //   }
+  //   liff.logout();
+  //   localStorage.clear(); // optional: clear localStorage too
+  //   window.location.reload();
+  // };
 
   if (loading) return <p>กำลังโหลดข้อมูลผู้ใช้...</p>;
   if (!profile) return <p>ไม่พบข้อมูลผู้ใช้</p>;
@@ -24,7 +24,7 @@ export default function LineLogin() {
       // Give it a short delay in case the user sees the avatar briefly
       const timeout = setTimeout(() => {
         liff.closeWindow();
-      }, 2000); // optional: 1 second delay
+      }, 1000); // optional: 1 second delay
 
       return () => clearTimeout(timeout);
     }
@@ -43,9 +43,9 @@ export default function LineLogin() {
         }}
       />
       <h1>{profile.displayName}</h1>
-      <p>บทบาท: {role}</p>
+      <p>บทบาทของคุณ: {role}</p>
 
-      <button
+      {/* <button
         onClick={logout}
         style={{
           padding: "0.5rem 1.5rem",
@@ -57,7 +57,7 @@ export default function LineLogin() {
         }}
       >
         ออกจากระบบ
-      </button>
+      </button> */}
     </main>
   );
 }

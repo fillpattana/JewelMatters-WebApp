@@ -11,6 +11,7 @@ const NavBarOwner = () => {
       <button onClick={() => go("createnewproduct")}>New Product</button>
       <button onClick={() => go("startsaleperiod")}>Start Sale</button>
       <button onClick={() => go("viewsales")}>View Sales</button>
+      <button onClick={() => go("ownerprofile")}>Profile</button>
     </nav>
   );
 };

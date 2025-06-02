@@ -8,6 +8,7 @@ import WorkShift from "./employee-pages/WorkShift.jsx";
 import CreateNewProduct from "./storeowner-pages/CreateNewProduct.jsx";
 import StartSalePeriod from "./storeowner-pages/StartSalePeriod.jsx";
 import ViewSales from "./storeowner-pages/ViewSales.jsx";
+import OwnerProfile from "./storeowner-pages/OwnerProfile.jsx";
 import Home from "./Home.jsx";
 import { useRole } from "./react-contexts/RoleContexts.jsx";
 import "./styles/App.css";
@@ -23,6 +24,7 @@ function PageRouter() {
     createnewproduct: <CreateNewProduct />,
     startsaleperiod: <StartSalePeriod />,
     viewsales: <ViewSales />,
+    ownerprofile: <OwnerProfile />,
   };
 
   return pages[page] || <Home />;
