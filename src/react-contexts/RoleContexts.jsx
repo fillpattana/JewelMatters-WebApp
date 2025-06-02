@@ -44,12 +44,7 @@ export const RoleProvider = ({ children }) => {
       }
     };
 
-    // Only fetch if role or profile isn't already set
-    if (!role || !profile) {
-      fetchUserRole();
-    } else {
-      setLoading(false);
-    }
+    fetchUserRole();
   }, []);
 
   return (
