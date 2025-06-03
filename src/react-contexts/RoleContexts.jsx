@@ -21,7 +21,12 @@ export const RoleProvider = ({ children }) => {
         await initLiff(liffId);
 
         if (!liff.isLoggedIn()) {
-          liff.login(); // redirect to LINE login
+          const justLoggedOut = localStorage.getItem("justLoggedOut");
+          if (justLoggedOut === "true") {
+            localStorage.removeItem("justLoggedOut");
+            return; // skip login this time
+          }
+          liff.login();
           return;
         }
 

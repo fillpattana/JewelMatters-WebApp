@@ -8,6 +8,7 @@ export default function OwnerProfile() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
+  const [loggedOut, setLoggedOut] = useState(false); // ✅ for logout toast
 
   const fetchPhoneNumber = async () => {
     if (!profile?.userId) return;
@@ -43,11 +44,26 @@ export default function OwnerProfile() {
 
   const logout = async () => {
     if (profile?.userId) {
-      await resetMenu(profile.userId);
+      try {
+        await resetMenu(profile.userId); // ✅ Reset rich menu
+      } catch (err) {
+        console.error("Error resetting menu:", err);
+      }
     }
-    liff.logout();
-    localStorage.clear();
-    window.location.close();
+
+    setLoggedOut(true); // ✅ Show logout toast
+
+    setTimeout(() => {
+      localStorage.setItem("justLoggedOut", "true");
+      liff.logout();
+      localStorage.clear();
+
+      if (liff.isInClient()) {
+        liff.closeWindow(); // ✅ Close LIFF window
+      } else {
+        window.location.href = "https://your-line-login-page.com"; // fallback
+      }
+    }, 1500); // wait for toast
   };
 
   useEffect(() => {
@@ -101,6 +117,12 @@ export default function OwnerProfile() {
       >
         ออกจากระบบ
       </button>
+
+      {loggedOut && (
+        <div style={{ marginTop: "1rem", color: "green" }}>
+          ✅ ออกจากระบบสำเร็จ
+        </div>
+      )}
     </main>
   );
 }
