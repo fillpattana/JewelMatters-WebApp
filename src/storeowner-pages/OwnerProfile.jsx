@@ -63,7 +63,7 @@ export default function OwnerProfile() {
       } else {
         window.location.href = "https://your-line-login-page.com"; // fallback
       }
-    }, 1500); // wait for toast
+    }, 10000); // wait for toast
   };
 
   useEffect(() => {
