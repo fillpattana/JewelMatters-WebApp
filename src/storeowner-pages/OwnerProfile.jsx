@@ -8,7 +8,7 @@ export default function OwnerProfile() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
-  const [loggedOut, setLoggedOut] = useState(false); // ✅ for logout toast
+  const [loggedOut, setLoggedOut] = useState(false);
 
   const fetchPhoneNumber = async () => {
     if (!profile?.userId) return;
@@ -43,27 +43,29 @@ export default function OwnerProfile() {
   };
 
   const logout = async () => {
-    if (profile?.userId) {
-      try {
-        await resetMenu(profile.userId); // ✅ Reset rich menu
-      } catch (err) {
-        console.error("Error resetting menu:", err);
-      }
+    if (!profile?.userId) return;
+
+    console.log("Logging out user:", profile.userId);
+
+    const result = await resetMenu(profile.userId);
+
+    if (result.success) {
+      setLoggedOut(true); // show toast
+      setTimeout(() => {
+        localStorage.setItem("justLoggedOut", "true");
+        localStorage.clear();
+
+        liff.logout();
+
+        if (liff.isInClient()) {
+          liff.closeWindow();
+        } else {
+          window.location.href = "https://your-line-login-page.com";
+        }
+      }, 3000); // 3s after toast
+    } else {
+      alert("ไม่สามารถรีเซ็ตเมนูได้ กรุณาลองใหม่");
     }
-
-    setLoggedOut(true); // ✅ Show logout toast
-
-    setTimeout(() => {
-      localStorage.setItem("justLoggedOut", "true");
-      liff.logout();
-      localStorage.clear();
-
-      if (liff.isInClient()) {
-        liff.closeWindow(); // ✅ Close LIFF window
-      } else {
-        window.location.href = "https://your-line-login-page.com"; // fallback
-      }
-    }, 10000); // wait for toast
   };
 
   useEffect(() => {
@@ -120,7 +122,7 @@ export default function OwnerProfile() {
 
       {loggedOut && (
         <div style={{ marginTop: "1rem", color: "green" }}>
-          ✅ ออกจากระบบสำเร็จ
+          ✅ ออกจากระบบสำเร็จ กำลังปิดหน้าต่าง...
         </div>
       )}
     </main>
