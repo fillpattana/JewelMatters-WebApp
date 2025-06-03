@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRole } from "../react-contexts/RoleContexts";
 import { liff } from "../liff";
+import { resetMenu } from "../api/resetUserMenu";
 
 export default function OwnerProfile() {
   const { profile } = useRole();
