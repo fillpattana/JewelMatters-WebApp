@@ -47,7 +47,7 @@ export default function OwnerProfile() {
     }
     liff.logout();
     localStorage.clear();
-    window.location.reload();
+    window.location.close();
   };
 
   useEffect(() => {
