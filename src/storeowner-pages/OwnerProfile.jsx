@@ -62,7 +62,7 @@ export default function OwnerProfile() {
         } else {
           window.location.href = "https://your-line-login-page.com";
         }
-      }, 3000); // 3s after toast
+      }, 2000);
     } else {
       alert("ไม่สามารถรีเซ็ตเมนูได้ กรุณาลองใหม่");
     }
@@ -72,7 +72,7 @@ export default function OwnerProfile() {
     fetchPhoneNumber();
   }, [profile]);
 
-  if (loading) return <p>กำลังโหลด...</p>;
+  if (loading) return <p>กำลังโหลดข้อมูลผู้ใช้งาน กรุณารอสักครู่...</p>;
 
   return (
     <main style={{ textAlign: "center", padding: "2rem" }}>
