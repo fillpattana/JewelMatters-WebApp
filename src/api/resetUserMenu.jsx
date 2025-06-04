@@ -2,7 +2,7 @@
 export const resetMenu = async (userId) => {
   try {
     const response = await fetch(
-      "https://jewelmatters-backend-cold-fog-2174.fly.dev/api/resetMenu",
+      "https://jewelmatters-backend-cold-fog-2174.fly.dev/api/resetUserMenu",
       {
         method: "POST",
         headers: {
