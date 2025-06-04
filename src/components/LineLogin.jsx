@@ -14,17 +14,17 @@ export default function LineLogin() {
       // Give it a short delay in case the user sees the avatar briefly
       const timeout = setTimeout(() => {
         liff.closeWindow();
-      }, 3000);
+      }, 5000);
 
       return () => clearTimeout(timeout);
     }
   }, [loading, role, profile]);
 
   return (
-    <main style={{ textAlign: "center", padding: "2rem" }}>
+    <main style={{ textAlign: "center", padding: "3rem" }}>
       <h1>ยินดีต้อนรับค่ะ คุณ {profile.displayName}</h1>
-      <p>บทบาทของคุณ: {role}</p>
-      <p>✅ ระบบกำลังปิดหน้าต่าง</p>
+      <p>บทบาทของคุณเป็น {role}</p>
+      <p style={{ color: "green" }}>✅ ระบบกำลังปิดหน้าต่าง</p>
     </main>
   );
 }
