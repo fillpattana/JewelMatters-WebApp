@@ -72,25 +72,24 @@ const CreateNewProduct = () => {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="w-9 h-9 p-1 bg-white border border-gray-300"
+                  className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
                 >
                   <img
                     src={editIcon}
                     alt="แก้ไข"
-                    className="w-6 h-6 object-contain"
+                    className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
                   />
                 </Button>
 
                 <Button
                   variant="outline"
                   size="icon"
-                  className="w-9 h-9 p-1 bg-white"
-                  onClick={() => handleDelete(product.id)}
+                  className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
                 >
                   <img
                     src={deleteIcon}
                     alt="ลบ"
-                    className="w-5 h-5 object-contain"
+                    className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
                   />
                 </Button>
               </div>
