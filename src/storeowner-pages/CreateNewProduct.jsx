@@ -64,11 +64,12 @@ const CreateNewProduct = () => {
               <div>
                 <p className="font-semibold">{product.name}</p>
                 <p className="text-sm text-gray-500">
-                  จำนวน: {product.quantity} | ราคา: ฿{product.price}
+                  จำนวน: {product.quantity}
                 </p>
+                <p className="text-sm text-gray-500">ราคา: ฿{product.price}</p>
               </div>
               <div className="flex space-x-2">
-                <Button variant="secondary" size="icon" className="w-9 h-9 p-1">
+                <Button size="icon" className="w-9 h-9 p-1">
                   <img
                     src={editIcon}
                     alt="แก้ไข"
@@ -76,7 +77,6 @@ const CreateNewProduct = () => {
                   />
                 </Button>
                 <Button
-                  variant="destructive"
                   size="icon"
                   className="w-9 h-9 p-1"
                   onClick={() => handleDelete(product.id)}
