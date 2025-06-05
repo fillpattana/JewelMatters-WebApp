@@ -51,8 +51,10 @@ import { Label } from "@/components/ui/label";
 
 const CreateNewProduct = () => {
   const [products, setProducts] = useState([
-    { id: 1, name: "เครื่องประดับเงิน", price: 1500, quantity: 10 },
-    { id: 2, name: "สร้อยทอง", price: 4500, quantity: 5 },
+    { id: 1, name: "แหวนเงิน", price: 199, quantity: 8 },
+    { id: 2, name: "แป้นเพชร", price: 169, quantity: 15 },
+    { id: 3, name: "แหวนทอง", price: 199, quantity: 8 },
+    { id: 4, name: "ต่างหูใหญ่", price: 189, quantity: 18 },
   ]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -81,7 +83,7 @@ const CreateNewProduct = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 pt-44">
       <h1 className="text-xl font-bold mb-4">คลังสินค้า</h1>
 
       <section>
