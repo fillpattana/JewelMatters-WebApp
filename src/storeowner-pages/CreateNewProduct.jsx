@@ -72,12 +72,12 @@ const CreateNewProduct = () => {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="w-9 h-9 p-1 bg-white"
+                  className="w-9 h-9 p-1 bg-white border border-gray-300"
                 >
                   <img
                     src={editIcon}
                     alt="แก้ไข"
-                    className="w-5 h-5 object-contain"
+                    className="w-6 h-6 object-contain"
                   />
                 </Button>
 
