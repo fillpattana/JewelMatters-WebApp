@@ -19,6 +19,10 @@
 
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import newproductIcon from "@/assets/jewelry-icon.png";
+import storefrontIcon from "@/assets/store-icon.png";
+import salesIcon from "@/assets/sales-icon.png";
+import userIcon from "@/assets/user-icon.png";
 
 const NavBarOwner = () => {
   const navigate = useNavigate();
@@ -31,29 +35,29 @@ const NavBarOwner = () => {
         onClick={() => go("createnewproduct")}
         className="flex gap-2 items-center"
       >
-        <Plus size={18} />
-        New Product
+        <img src={newproductIcon} alt="สินค้า" className="w-5 h-5" />
+        คลังสินค้า
       </Button>
       <Button
         onClick={() => go("startsaleperiod")}
         className="flex gap-2 items-center"
       >
-        <Play size={18} />
-        Start Sale
+        <img src={storefrontIcon} alt="ร้านค้า" className="w-5 h-5" />
+        จัดการร้านค้า
       </Button>
       <Button
         onClick={() => go("viewsales")}
         className="flex gap-2 items-center"
       >
-        <LineChart size={18} />
-        View Sales
+        <img src={salesIcon} alt="ยอดขาย" className="w-5 h-5" />
+        ดูยอดขาย
       </Button>
       <Button
         onClick={() => go("ownerprofile")}
         className="flex gap-2 items-center"
       >
-        <User size={18} />
-        Profile
+        <img src={userIcon} alt="โปรไฟล์" className="w-5 h-5" />
+        โปรไฟล์
       </Button>
     </nav>
   );
