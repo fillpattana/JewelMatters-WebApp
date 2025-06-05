@@ -90,6 +90,7 @@ const CreateNewProduct = () => {
                     src={deleteIcon}
                     alt="ลบ"
                     className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
+                    onClick={() => handleDelete(product.id)}
                   />
                 </Button>
               </div>
