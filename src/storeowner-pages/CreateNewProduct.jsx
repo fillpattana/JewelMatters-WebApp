@@ -13,8 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import editIcon from "../assets/edit-icon.png";
-import deleteIcon from "../assets/delete-icon.png";
+import editIcon from "../../assets/edit-icon.png";
+import deleteIcon from "../../assets/delete-icon.png";
 
 const CreateNewProduct = () => {
   const [products, setProducts] = useState([
