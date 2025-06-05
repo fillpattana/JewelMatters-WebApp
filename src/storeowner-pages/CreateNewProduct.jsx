@@ -13,8 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import editIcon from "../../assets/edit-icon.png";
-import deleteIcon from "../../assets/delete-icon.png";
+import editIcon from "@/assets/edit-icon.png";
+import deleteIcon from "@/assets/delete-icon.png";
 
 const CreateNewProduct = () => {
   const [products, setProducts] = useState([
@@ -70,7 +70,7 @@ const CreateNewProduct = () => {
               </div>
               <div className="flex space-x-2">
                 <Button
-                  variants="outline"
+                  variant="outline"
                   size="icon"
                   className="w-9 h-9 p-1 bg-white"
                 >
@@ -80,10 +80,11 @@ const CreateNewProduct = () => {
                     className="w-5 h-5 object-contain"
                   />
                 </Button>
+
                 <Button
-                  variants="outline"
+                  variant="outline"
                   size="icon"
-                  className="w-9 h-9 p-1 bg-white "
+                  className="w-9 h-9 p-1 bg-white"
                   onClick={() => handleDelete(product.id)}
                 >
                   <img
