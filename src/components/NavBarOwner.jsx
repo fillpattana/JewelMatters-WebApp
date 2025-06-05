@@ -37,8 +37,8 @@ const NavBarOwner = () => {
   ];
 
   return (
-    <div className="w-full bg-white shadow-md p-4">
-      <h1 className="text-lg font-bold mb-4 text-left">ข้อมูลธุรกิจ</h1>
+    <div className="fixed top-0 left-0 right-0 z-50 w-full bg-white shadow-md p-4 rounded-b-xl">
+      <h2 className="text-lg font-bold mb-4 text-left">ข้อมูลธุรกิจ</h2>
       <nav className="flex flex-wrap justify-center gap-4 sm:gap-6 w-full">
         {buttons.map(({ icon, label, page }) => {
           const isActive = currentPage === page;
@@ -50,7 +50,9 @@ const NavBarOwner = () => {
               <Button
                 variant="ghost"
                 onClick={() => go(page)}
-                className="w-20 h-20 p-2 sm:w-24 sm:h-24"
+                className={`w-20 h-20 p-2 sm:w-24 sm:h-24 transition-transform duration-200 ${
+                  isActive ? "scale-105" : "hover:scale-105"
+                }`}
               >
                 <img
                   src={icon}
@@ -59,8 +61,8 @@ const NavBarOwner = () => {
                 />
               </Button>
               <span
-                className={`text-md ${
-                  isActive ? "text-black font-medium" : "text-gray-400"
+                className={`text-md font-bold transition-colors duration-300 ${
+                  isActive ? "text-black" : "text-gray-400"
                 }`}
               >
                 {label}
