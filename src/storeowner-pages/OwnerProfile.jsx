@@ -60,7 +60,8 @@ export default function OwnerProfile() {
         if (liff.isInClient()) {
           liff.closeWindow();
         } else {
-          window.location.href = "https://your-line-login-page.com";
+          window.location.href =
+            "https://jewel-matters.vercel.app/?page=linelogin";
         }
       }, 2000);
     } else {
