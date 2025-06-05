@@ -19,7 +19,6 @@
 
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, Play, LineChart, User } from "lucide-react";
 
 const NavBarOwner = () => {
   const navigate = useNavigate();
