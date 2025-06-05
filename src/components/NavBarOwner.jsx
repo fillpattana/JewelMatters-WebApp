@@ -35,17 +35,17 @@ const NavBarOwner = () => {
   const buttons = [
     {
       icon: newproductIcon,
-      label: "คลังสินค้า",
+      label: "สินค้า",
       page: "createnewproduct",
     },
     {
       icon: storefrontIcon,
-      label: "จัดการร้านค้า",
+      label: "ร้านค้า",
       page: "startsaleperiod",
     },
     {
       icon: salesIcon,
-      label: "ดูยอดขาย",
+      label: "ยอดขาย",
       page: "viewsales",
     },
     {
@@ -56,29 +56,36 @@ const NavBarOwner = () => {
   ];
 
   return (
-    <nav className="flex justify-center gap-6 p-4 shadow-md bg-white">
-      {buttons.map(({ icon, label, page }) => {
-        const isActive = currentPage === page;
-        return (
-          <div key={page} className="flex flex-col items-center gap-1">
-            <Button
-              variant="outline"
-              onClick={() => go(page)}
-              className="w-12 h-12 p-2"
-            >
-              <img src={icon} alt={label} className="w-6 h-6 object-contain" />
-            </Button>
-            <span
-              className={`text-sm ${
-                isActive ? "text-black font-medium" : "text-gray-400"
-              }`}
-            >
-              {label}
-            </span>
-          </div>
-        );
-      })}
-    </nav>
+    <div className="flex flex-col items-center gap-2">
+      <h2 className="text-lg font-bold">ข้อมูลกิจการ</h2>
+      <nav className="flex justify-center gap-6 p-4 shadow-md bg-white">
+        {buttons.map(({ icon, label, page }) => {
+          const isActive = currentPage === page;
+          return (
+            <div key={page} className="flex flex-col items-center gap-1">
+              <Button
+                variant="outline"
+                onClick={() => go(page)}
+                className="w-20 h-20 p-20"
+              >
+                <img
+                  src={icon}
+                  alt={label}
+                  className="w-16 h-16 object-contain"
+                />
+              </Button>
+              <span
+                className={`text-sm ${
+                  isActive ? "text-black font-medium" : "text-gray-400"
+                }`}
+              >
+                {label}
+              </span>
+            </div>
+          );
+        })}
+      </nav>
+    </div>
   );
 };
 
