@@ -1,22 +1,3 @@
-// import { useNavigate, createSearchParams } from "react-router-dom";
-
-// const NavBarOwner = () => {
-//   const navigate = useNavigate();
-//   const go = (page) =>
-//     navigate({ search: createSearchParams({ page }).toString() });
-
-//   return (
-//     <nav className="navbar">
-//       <button onClick={() => go("createnewproduct")}>New Product</button>
-//       <button onClick={() => go("startsaleperiod")}>Start Sale</button>
-//       <button onClick={() => go("viewsales")}>View Sales</button>
-//       <button onClick={() => go("ownerprofile")}>Profile</button>
-//     </nav>
-//   );
-// };
-
-// export default NavBarOwner;
-
 import { useNavigate, createSearchParams, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import newproductIcon from "@/assets/jewelry-icon.png";
@@ -56,11 +37,9 @@ const NavBarOwner = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-2 p-4">
-      <h1 className="text-2xl font-bold mb-4">ข้อมูลธุรกิจ</h1>
-
-      {/* Responsive nav */}
-      <nav className="flex flex-wrap justify-center gap-4 sm:gap-6 shadow-md bg-white p-4">
+    <div className="w-full bg-white shadow-md p-4">
+      <h1 className="text-lg font-bold mb-4 text-left">ข้อมูลธุรกิจ</h1>
+      <nav className="flex flex-wrap justify-center gap-4 sm:gap-6 w-full">
         {buttons.map(({ icon, label, page }) => {
           const isActive = currentPage === page;
           return (
@@ -69,7 +48,7 @@ const NavBarOwner = () => {
               className="flex flex-col items-center gap-1 text-center min-w-20"
             >
               <Button
-                variant="outline"
+                variant="ghost"
                 onClick={() => go(page)}
                 className="w-20 h-20 p-2 sm:w-24 sm:h-24"
               >
@@ -80,7 +59,7 @@ const NavBarOwner = () => {
                 />
               </Button>
               <span
-                className={`text-sm ${
+                className={`text-md ${
                   isActive ? "text-black font-medium" : "text-gray-400"
                 }`}
               >
