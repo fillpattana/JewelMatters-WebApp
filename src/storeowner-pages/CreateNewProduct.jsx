@@ -25,6 +25,9 @@ const CreateNewProduct = () => {
   ]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
@@ -89,8 +92,11 @@ const CreateNewProduct = () => {
                   <img
                     src={deleteIcon}
                     alt="ลบ"
-                    className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
-                    onClick={() => handleDelete(product.id)}
+                    className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain cursor-pointer"
+                    onClick={() => {
+                      setProductToDelete(product);
+                      setDeleteDialogOpen(true);
+                    }}
                   />
                 </Button>
               </div>
@@ -137,7 +143,10 @@ const CreateNewProduct = () => {
                     type="number"
                     value={newProduct.quantity}
                     onChange={(e) =>
-                      setNewProduct({ ...newProduct, quantity: e.target.value })
+                      setNewProduct({
+                        ...newProduct,
+                        quantity: e.target.value,
+                      })
                     }
                   />
                 </div>
@@ -158,6 +167,40 @@ const CreateNewProduct = () => {
           </AlertDialog>
         </div>
       </section>
+
+      {/* Delete Confirmation Dialog */}
+      {productToDelete && (
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>ยืนยันการลบสินค้า</AlertDialogTitle>
+            </AlertDialogHeader>
+
+            <div className="text-sm text-gray-700">
+              ยืนยันที่จะลบ{" "}
+              <span className="font-semibold">{productToDelete.name}</span>{" "}
+              จำนวน{" "}
+              <span className="font-semibold">{productToDelete.quantity}</span>{" "}
+              ชิ้นจากคลังสินค้าหรือไม่?
+            </div>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-gray-300 hover:bg-gray-400">
+                ยกเลิก
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={() => {
+                  handleDelete(productToDelete.id);
+                  setDeleteDialogOpen(false);
+                }}
+              >
+                ลบสินค้า
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 };
