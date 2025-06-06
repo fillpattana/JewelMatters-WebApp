@@ -102,7 +102,9 @@ const CreateNewProduct = () => {
         <div className="mt-6">
           <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <AlertDialogTrigger asChild>
-              <Button>สร้างสินค้าใหม่</Button>
+              <Button className="bg-[#192F7B] hover:bg-[#16296b] text-white">
+                สร้างสินค้าใหม่
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -142,8 +144,13 @@ const CreateNewProduct = () => {
               </div>
 
               <AlertDialogFooter>
-                <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                <AlertDialogAction onClick={handleAddProduct}>
+                <AlertDialogCancel className="bg-red-600 hover:bg-red-700 text-white">
+                  ยกเลิก
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-[#192F7B] hover:bg-[#16296b] text-white"
+                  onClick={handleAddProduct}
+                >
                   ยืนยัน
                 </AlertDialogAction>
               </AlertDialogFooter>
