@@ -121,9 +121,13 @@ const CreateNewProduct = () => {
                 <div>
                   <Label>ชื่อสินค้า</Label>
                   <Input
-                    value={newProduct.name}
+                    type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    min="0"
+                    value={newProduct.quantity}
                     onChange={(e) =>
-                      setNewProduct({ ...newProduct, name: e.target.value })
+                      setNewProduct({ ...newProduct, quantity: e.target.value })
                     }
                   />
                 </div>
@@ -131,6 +135,9 @@ const CreateNewProduct = () => {
                   <Label>ราคา</Label>
                   <Input
                     type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    min="0"
                     value={newProduct.price}
                     onChange={(e) =>
                       setNewProduct({ ...newProduct, price: e.target.value })
