@@ -8,23 +8,24 @@ export default function LineLogin() {
 
   if (loading) return <p>กำลังโหลดข้อมูลผู้ใช้...</p>;
   if (!profile) return <p>ไม่พบข้อมูลผู้ใช้</p>;
+  if (!role) return <p>กำลังตรวจสอบบทบาทผู้ใช้...</p>;
 
-  useEffect(() => {
-    if (!loading && role && profile?.userId) {
-      // Give it a short delay in case the user sees the avatar briefly
-      const timeout = setTimeout(() => {
-        liff.closeWindow();
-      }, 5000);
+  // useEffect(() => {
+  //   if (!loading && role && profile?.userId) {
+  //     // Give it a short delay in case the user sees the avatar briefly
+  //     const timeout = setTimeout(() => {
+  //       liff.closeWindow();
+  //     }, 5000);
 
-      return () => clearTimeout(timeout);
-    }
-  }, [loading, role, profile]);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [loading, role, profile]);
 
   return (
-    <main style={{ textAlign: "center", padding: "3rem" }}>
-      <h1>ยินดีต้อนรับค่ะ คุณ {profile.displayName}</h1>
+    <main style={{ textAlign: "left", padding: "3rem" }}>
+      <h2>ยินดีต้อนรับค่ะ คุณ {profile.displayName}</h2>
       <p>บทบาทของคุณเป็น {role}</p>
-      <p style={{ color: "green" }}>✅ ระบบกำลังปิดหน้าต่าง</p>
+      <p>ผู้ใช้สามารถเริ่มต้นใช้งานระบบได้เลยค่ะ</p>
     </main>
   );
 }
