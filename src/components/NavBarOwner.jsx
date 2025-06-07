@@ -45,13 +45,13 @@ const NavBarOwner = () => {
           return (
             <div
               key={page}
-              className="flex flex-col items-center gap-1 text-center min-w-20"
+              className="flex flex-col items-center text-center min-w-20 h-32 sm:h-36 justify-start"
             >
               <Button
                 variant="ghost"
                 onClick={() => go(page)}
-                className={`w-20 h-20 p-2 sm:w-24 sm:h-24 transition-transform duration-200 ${
-                  isActive ? "scale-120" : "hover:scale-120"
+                className={`w-20 h-20 p-2 sm:w-24 sm:h-24 transition-transform duration-200 origin-top ${
+                  isActive ? "scale-110" : "hover:scale-110"
                 }`}
               >
                 <img
@@ -61,7 +61,7 @@ const NavBarOwner = () => {
                 />
               </Button>
               <span
-                className={`text-md font-bold transition-colors duration-300 ${
+                className={`text-sm font-bold sm:text-md transition-colors duration-300 ${
                   isActive ? "text-black" : "text-gray-400"
                 }`}
               >
