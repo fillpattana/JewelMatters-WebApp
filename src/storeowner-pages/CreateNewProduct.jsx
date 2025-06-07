@@ -26,7 +26,10 @@ const CreateNewProduct = () => {
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
   const [productToDelete, setProductToDelete] = useState(null);
+  const [productToEdit, setProductToEdit] = useState(null);
 
   const [newProduct, setNewProduct] = useState({
     name: "",
@@ -50,6 +53,16 @@ const CreateNewProduct = () => {
 
   const handleDelete = (id) => {
     setProducts((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const handleEdit = (updatedProduct) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === updatedProduct.id ? updatedProduct : product
+      )
+    );
+    setEditDialogOpen(false);
+    setProductToEdit(null);
   };
 
   return (
@@ -76,6 +89,10 @@ const CreateNewProduct = () => {
                   variant="outline"
                   size="icon"
                   className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
+                  onClick={() => {
+                    setProductToEdit(product);
+                    setEditDialogOpen(true);
+                  }}
                 >
                   <img
                     src={editIcon}
@@ -133,7 +150,6 @@ const CreateNewProduct = () => {
                   <Input
                     type="number"
                     inputMode="numeric"
-                    pattern="[0-9]*"
                     min="0"
                     value={newProduct.price}
                     onChange={(e) =>
@@ -146,7 +162,6 @@ const CreateNewProduct = () => {
                   <Input
                     type="number"
                     inputMode="numeric"
-                    pattern="[0-9]*"
                     min="0"
                     value={newProduct.quantity}
                     onChange={(e) =>
@@ -200,6 +215,75 @@ const CreateNewProduct = () => {
                 }}
               >
                 ลบสินค้า
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+
+      {/* Edit Product Dialog */}
+      {productToEdit && (
+        <AlertDialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>แก้ไขสินค้า</AlertDialogTitle>
+            </AlertDialogHeader>
+
+            <div className="space-y-3">
+              <div>
+                <Label>ชื่อสินค้า</Label>
+                <Input
+                  type="text"
+                  value={productToEdit.name}
+                  onChange={(e) =>
+                    setProductToEdit({
+                      ...productToEdit,
+                      name: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <Label>ราคา</Label>
+                <Input
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  value={productToEdit.price}
+                  onChange={(e) =>
+                    setProductToEdit({
+                      ...productToEdit,
+                      price: parseFloat(e.target.value),
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <Label>จำนวน</Label>
+                <Input
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  value={productToEdit.quantity}
+                  onChange={(e) =>
+                    setProductToEdit({
+                      ...productToEdit,
+                      quantity: parseInt(e.target.value),
+                    })
+                  }
+                />
+              </div>
+            </div>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-red-600 hover:bg-red-700 text-white">
+                ยกเลิก
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-[#192F7B] hover:bg-[#16296b] text-white"
+                onClick={() => handleEdit(productToEdit)}
+              >
+                บันทึก
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
