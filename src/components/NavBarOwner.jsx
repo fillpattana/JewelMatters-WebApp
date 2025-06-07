@@ -51,7 +51,7 @@ const NavBarOwner = () => {
                 variant="ghost"
                 onClick={() => go(page)}
                 className={`w-20 h-20 p-2 sm:w-24 sm:h-24 transition-transform duration-200 ${
-                  isActive ? "scale-105" : "hover:scale-105"
+                  isActive ? "scale-120" : "hover:scale-120"
                 }`}
               >
                 <img
