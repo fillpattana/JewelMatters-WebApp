@@ -1,7 +1,7 @@
 import { useNavigate, createSearchParams, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import newproductIcon from "@/assets/jewelry-icon.png";
-import storefrontIcon from "@/assets/store-icon.png";
+import jewelryIcon from "@/assets/jewelry-icon.png";
+import storeIcon from "@/assets/store-icon.png";
 import salesIcon from "@/assets/sales-icon.png";
 import userIcon from "@/assets/user-icon.png";
 
@@ -15,12 +15,12 @@ const NavBarOwner = () => {
 
   const buttons = [
     {
-      icon: newproductIcon,
+      icon: jewelryIcon,
       label: "สินค้า",
       page: "createnewproduct",
     },
     {
-      icon: storefrontIcon,
+      icon: storeIcon,
       label: "ร้านค้า",
       page: "startsaleperiod",
     },
@@ -45,13 +45,13 @@ const NavBarOwner = () => {
           return (
             <div
               key={page}
-              className="flex flex-col items-center text-center min-w-20 h-32 sm:h-36 justify-start"
+              className="flex flex-col items-center gap-1 text-center min-w-20"
             >
               <Button
                 variant="ghost"
                 onClick={() => go(page)}
-                className={`w-20 h-20 p-2 sm:w-24 sm:h-24 transition-transform duration-200 origin-top ${
-                  isActive ? "scale-110" : "hover:scale-110"
+                className={`w-20 h-20 p-2 sm:w-24 sm:h-24 transition-transform duration-200 ${
+                  isActive ? "scale-105" : "hover:scale-105"
                 }`}
               >
                 <img
@@ -61,7 +61,7 @@ const NavBarOwner = () => {
                 />
               </Button>
               <span
-                className={`text-sm font-bold sm:text-md transition-colors duration-300 ${
+                className={`text-md font-bold transition-colors duration-300 ${
                   isActive ? "text-black" : "text-gray-400"
                 }`}
               >
