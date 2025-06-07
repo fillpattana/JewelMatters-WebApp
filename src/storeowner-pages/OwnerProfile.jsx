@@ -41,6 +41,12 @@ export default function OwnerProfile() {
     }
   };
 
+  useEffect(() => {
+    if (profile?.userId) {
+      fetchPhoneNumber();
+    }
+  }, [profile?.userId]);
+
   const savePhoneNumber = async () => {
     try {
       await fetch(
@@ -84,10 +90,6 @@ export default function OwnerProfile() {
     }
   };
 
-  useEffect(() => {
-    fetchPhoneNumber();
-  }, [profile]);
-
   if (loading) return <p>กำลังโหลดข้อมูลผู้ใช้งาน กรุณารอสักครู่...</p>;
 
   return (
@@ -102,10 +104,10 @@ export default function OwnerProfile() {
         <h1 className="text-xl font-semibold mt-4">{profile?.displayName}</h1>
 
         {/* Phone number section */}
-        <div className="mt-6 text-left">
-          <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center justify-between w-full whitespace-nowrap">
             <span className="text-gray-700 font-medium">เบอร์โทรศัพท์:</span>
-            <div className="flex items-center">
+            <div className="flex items-center flex-shrink-0 ml-4">
               <span className="text-gray-800 mr-2">
                 {phoneNumber || "ไม่มีข้อมูล"}
               </span>
@@ -118,18 +120,15 @@ export default function OwnerProfile() {
                 <img
                   src={editIcon}
                   alt="แก้ไข"
-                  className="w-5 h-5 object-contain cursor-pointer"
+                  className="w-5 h-5 min-w-[20px] min-h-[20px] ml-1 cursor-pointer"
                 />
               </button>
             </div>
           </div>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500">
             เบอร์โทรศัพท์นี้จะถูกนำไปสร้างบิลในรูปแบบ PromptPay
             ให้กับลูกค้าของคุณ
           </p>
-          {saved && (
-            <p className="text-green-600 text-sm mt-1">การบันทึกสำเร็จ</p>
-          )}
         </div>
 
         {/* Logout button */}
