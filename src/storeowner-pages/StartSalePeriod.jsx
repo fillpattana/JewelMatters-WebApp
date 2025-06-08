@@ -1,114 +1,279 @@
 import React, { useState, useEffect } from "react";
-import "../styles/ManageBranches.css"; // move <style> there or keep in styled-components
+import {
+  format,
+  differenceInDays,
+  isBefore,
+  isAfter,
+  parseISO,
+} from "date-fns";
+import { DatePicker } from "../components/ui/datepicker";
+import { EmployeeCombobox } from "../components/ui/employeecombobox";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { editIcon, deleteIcon } from "@/components/icons"; // if you have these icons, else replace with something else
 
-const storefrontsData = [
+const MOCK_EMPLOYEES = [
+  { value: "emp1", label: "สมชาย" },
+  { value: "emp2", label: "สมหญิง" },
+  { value: "emp3", label: "ศิริพร" },
+];
+
+const MOCK_STOREFRONTS = [
   {
     id: 1,
-    name: "สาขาสุขุมวิท 21",
-    status: "ยังไม่สิ้นสุด",
-    statusLabel: "ยังไม่สิ้นสุด",
-    startDate: "2023-01-05",
-    endDate: null,
-    sales: 157900,
-    itemsSold: 3187,
+    name: "สาขาอโศก",
+    startDate: "2025-06-01",
+    endDate: "2025-06-30",
+    employee: "สมชาย",
+    note: "ยอดขายดีมาก",
   },
   {
     id: 2,
-    name: "สาขาราชพฤกษ์",
-    status: "ยังไม่สิ้นสุด",
-    statusLabel: "ยังไม่สิ้นสุด",
-    startDate: "2023-04-12",
-    endDate: null,
-    sales: 230500,
-    itemsSold: 4958,
-  },
-  {
-    id: 3,
-    name: "สาขานิมมานฯ",
-    status: "ยังไม่สิ้นสุด",
-    statusLabel: "ยังไม่สิ้นสุด",
-    startDate: "2023-07-31",
-    endDate: null,
-    sales: 144200,
-    itemsSold: 2428,
+    name: "สาขาเซ็นทรัล",
+    startDate: "2025-05-01",
+    endDate: "2025-05-31",
+    employee: "สมหญิง",
+    note: "ลูกค้าเยอะ",
   },
 ];
 
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+export default function StartSalePeriod() {
+  const [storefronts, setStorefronts] = useState(MOCK_STOREFRONTS);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-const StartSalePeriod = () => {
-  const [selectedId, setSelectedId] = useState(storefrontsData[0].id);
+  // New storefront form states
+  const [name, setName] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState("");
+  const [note, setNote] = useState("");
 
-  const selectedStore = storefrontsData.find(
-    (store) => store.id === selectedId
-  );
+  // Calculate days left helper
+  const calculateDaysLeft = (end) => {
+    const today = new Date();
+    const endD = typeof end === "string" ? parseISO(end) : end;
+    if (isBefore(endD, today)) return 0;
+    return differenceInDays(endD, today);
+  };
+
+  // Filter active storefronts (endDate >= today)
+  const activeStorefronts = storefronts.filter(({ endDate }) => {
+    const today = new Date();
+    const endD = parseISO(endDate);
+    return isAfter(endD, today) || differenceInDays(endD, today) === 0;
+  });
+
+  // Filter ended storefronts (for history)
+  const endedStorefronts = storefronts
+    .filter(({ endDate }) => {
+      const today = new Date();
+      const endD = parseISO(endDate);
+      return isBefore(endD, today);
+    })
+    .slice(-15)
+    .reverse();
+
+  const resetForm = () => {
+    setName("");
+    setStartDate(null);
+    setEndDate(null);
+    setSelectedEmployee("");
+    setNote("");
+  };
+
+  const handleCreateStorefront = (e) => {
+    e.preventDefault();
+    if (!name || !startDate || !endDate || !selectedEmployee) {
+      alert("กรุณากรอกข้อมูลให้ครบ");
+      return;
+    }
+    const newStorefront = {
+      id: Date.now(),
+      name,
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate: format(endDate, "yyyy-MM-dd"),
+      employee: MOCK_EMPLOYEES.find((emp) => emp.value === selectedEmployee)
+        ?.label,
+      note,
+    };
+    setStorefronts((prev) => [...prev, newStorefront]);
+    resetForm();
+    setDialogOpen(false);
+  };
 
   return (
-    <div className="container" id="component-container">
-      <div className="page-title">จัดการสาขา</div>
-      <div>
-        <div className="section-title">ร้านค้าปัจจุบัน</div>
-        <div className="storefront-list">
-          {storefrontsData.map((store) => (
-            <div
-              key={store.id}
-              className={`storefront-card ${selectedId === store.id ? "selected" : ""}`}
-              role="button"
-              tabIndex={0}
-              onClick={() => setSelectedId(store.id)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") setSelectedId(store.id);
-              }}
-              aria-label={`ดูรายละเอียดสำหรับ ${store.name}`}
-            >
-              <div className="storefront-info">
-                <div className="storefront-title">{store.name}</div>
-                <div className="storefront-status">
-                  <i
-                    className="fas fa-circle"
-                    style={{ fontSize: "10px", color: "var(--success)" }}
-                  ></i>
-                  {store.statusLabel}
-                </div>
-              </div>
-              <span className="storefront-arrow">
-                <i className="fas fa-chevron-right"></i>
-              </span>
-            </div>
-          ))}
-        </div>
+    <div className="max-w-3xl mx-auto p-4 space-y-8">
+      <h1 className="text-3xl font-bold">จัดการสาขา</h1>
 
-        {selectedStore && (
-          <div className="storefront-details" aria-live="polite">
-            <div className="details-row">
-              <span className="details-label">วันที่เริ่มต้น</span>
-              <span className="details-value">{selectedStore.startDate}</span>
-            </div>
-            <div className="details-row">
-              <span className="details-label">วันที่สิ้นสุด</span>
-              <span className="details-value">
-                {selectedStore.endDate || "-"}
-              </span>
-            </div>
-            <div className="details-row">
-              <span className="details-label">ยอดขายรวม</span>
-              <span className="details-value">
-                {numberWithCommas(selectedStore.sales)} บาท
-              </span>
-            </div>
-            <div className="details-row">
-              <span className="details-label">ยอดรวมจำนวน สินค้าออก</span>
-              <span className="details-value">
-                {numberWithCommas(selectedStore.itemsSold)}
-              </span>
-            </div>
-          </div>
+      {/* Current Storefronts Section */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">สาขาปัจจุบัน</h2>
+        {activeStorefronts.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            ไม่มีสาขาที่กำลังเปิดอยู่
+          </p>
         )}
-      </div>
+        <Accordion type="single" collapsible>
+          {activeStorefronts.map((storefront) => {
+            const daysLeft = calculateDaysLeft(storefront.endDate);
+            return (
+              <AccordionItem value={String(storefront.id)} key={storefront.id}>
+                <AccordionTrigger className="flex justify-between items-center">
+                  <div className="font-medium">{storefront.name}</div>
+                  <Badge variant="success" className="text-sm">
+                    เหลือ {daysLeft} วัน
+                  </Badge>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    <p>
+                      <strong>วันที่เริ่มต้น:</strong> {storefront.startDate}
+                    </p>
+                    <p>
+                      <strong>วันที่สิ้นสุด:</strong> {storefront.endDate}
+                    </p>
+                    <p>
+                      <strong>พนักงาน:</strong> {storefront.employee}
+                    </p>
+                    <p>
+                      <strong>หมายเหตุ:</strong> {storefront.note || "-"}
+                    </p>
+                    <div className="flex space-x-2 mt-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-1"
+                      >
+                        {editIcon} แก้ไข
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="flex items-center gap-1"
+                      >
+                        {deleteIcon} ลบ
+                      </Button>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      </section>
+
+      {/* Create New Storefront Button and Dialog */}
+      <section>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <Button>สร้างสาขาใหม่</Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle>สร้างสาขาใหม่</DialogTitle>
+              <DialogDescription>
+                กรุณากรอกข้อมูลสาขาใหม่ให้ครบถ้วน
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleCreateStorefront} className="space-y-4 mt-4">
+              <div>
+                <Label htmlFor="name">ชื่อสาขา</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label>วันที่เริ่มต้น</Label>
+                <DatePicker date={startDate} setDate={setStartDate} />
+              </div>
+
+              <div>
+                <Label>วันที่สิ้นสุด</Label>
+                <DatePicker date={endDate} setDate={setEndDate} />
+              </div>
+
+              <div>
+                <Label>พนักงาน</Label>
+                <EmployeeCombobox
+                  employees={MOCK_EMPLOYEES}
+                  value={selectedEmployee}
+                  setValue={setSelectedEmployee}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="note">หมายเหตุ</Label>
+                <Textarea
+                  id="note"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="หมายเหตุเพิ่มเติม (ถ้ามี)"
+                />
+              </div>
+
+              <DialogFooter>
+                <Button type="submit" className="w-full">
+                  บันทึกสาขา
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </section>
+
+      {/* History Section */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">ประวัติสาขาที่สิ้นสุด</h2>
+        {endedStorefronts.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            ไม่มีประวัติสาขาที่สิ้นสุด
+          </p>
+        )}
+        <Accordion type="single" collapsible>
+          {endedStorefronts.map((storefront) => (
+            <AccordionItem value={String(storefront.id)} key={storefront.id}>
+              <AccordionTrigger>{storefront.name}</AccordionTrigger>
+              <AccordionContent>
+                <p>
+                  <strong>วันที่เริ่มต้น:</strong> {storefront.startDate}
+                </p>
+                <p>
+                  <strong>วันที่สิ้นสุด:</strong> {storefront.endDate}
+                </p>
+                <p>
+                  <strong>พนักงาน:</strong> {storefront.employee}
+                </p>
+                <p>
+                  <strong>หมายเหตุ:</strong> {storefront.note || "-"}
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </section>
     </div>
   );
-};
-
-export default StartSalePeriod;
+}
