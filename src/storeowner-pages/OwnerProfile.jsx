@@ -45,7 +45,7 @@ export default function OwnerProfile() {
     if (profile?.userId) {
       fetchPhoneNumber();
     }
-  }, [profile]);
+  }, [profile?.userId]);
 
   const savePhoneNumber = async () => {
     try {
