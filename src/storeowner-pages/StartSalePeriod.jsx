@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import CurrentStoreFrontList from "../components/CurrentStoreFrontList";
 import CreateStoreFront from "../components/CreateStoreFront";
+import EndedStorefrontHistory from "../components/EndedStorefrontHistory";
 
 export default function StartSalePeriod() {
   const [storefronts, setStorefronts] = useState([]);
@@ -17,6 +18,7 @@ export default function StartSalePeriod() {
       <div className="pt-4">
         <CreateStoreFront onCreate={handleNewStorefront} />
       </div>
+      <EndedStorefrontHistory />
     </div>
   );
 }
