@@ -9,19 +9,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
-  AlertDialogContent,
   AlertDialogTrigger,
-  AlertDialogCancel,
-  AlertDialogAction,
-  AlertDialogFooter,
+  AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
   AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
 import deleteIcon from "@/assets/delete-icon.png";
+import editIcon from "@/assets/edit-icon.png";
 
-// 🧪 Sample data (replace with real API call later)
 const sampleStorefronts = [
   {
     id: "sf-001",
@@ -52,9 +52,20 @@ function calculateRemainingDays(endDate) {
 
 export default function CurrentStoreFrontList() {
   const [storefronts, setStorefronts] = useState(sampleStorefronts);
+  const [editingStore, setEditingStore] = useState(null);
+  const [tempMemo, setTempMemo] = useState("");
 
   const handleDelete = (id) => {
     setStorefronts((prev) => prev.filter((sf) => sf.id !== id));
+  };
+
+  const handleSave = () => {
+    setStorefronts((prev) =>
+      prev.map((sf) =>
+        sf.id === editingStore.id ? { ...sf, memo: tempMemo } : sf
+      )
+    );
+    setEditingStore(null);
   };
 
   return (
@@ -89,23 +100,19 @@ export default function CurrentStoreFrontList() {
               </div>
 
               <div className="flex gap-3 mt-4">
-                {/* Edit Button in Sheet */}
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="secondary">แก้ไข</Button>
-                  </SheetTrigger>
-                  <SheetContent side="right">
-                    <h3 className="text-lg font-semibold mb-4">
-                      แก้ไข {store.name}
-                    </h3>
-                    {/* Add edit form fields here later */}
-                    <p className="text-sm text-muted-foreground">
-                      Coming soon...
-                    </p>
-                  </SheetContent>
-                </Sheet>
+                {/* Edit Button */}
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setTempMemo(store.memo);
+                    setEditingStore(store);
+                  }}
+                >
+                  <img src={editIcon} alt="edit" className="w-4 h-4 mr-2" />
+                  แก้ไข
+                </Button>
 
-                {/* Delete Button with Alert Dialog */}
+                {/* Delete Button */}
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="destructive">
@@ -137,6 +144,29 @@ export default function CurrentStoreFrontList() {
           </AccordionItem>
         ))}
       </Accordion>
+
+      {/* Edit Dialog */}
+      <AlertDialog
+        open={!!editingStore}
+        onOpenChange={() => setEditingStore(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              แก้ไขบันทึกของ {editingStore?.name}
+            </AlertDialogTitle>
+          </AlertDialogHeader>
+          <Input
+            value={tempMemo}
+            onChange={(e) => setTempMemo(e.target.value)}
+            placeholder="ระบุบันทึกช่วยจำใหม่..."
+          />
+          <AlertDialogFooter>
+            <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
+            <AlertDialogAction onClick={handleSave}>บันทึก</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
