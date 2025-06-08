@@ -11,10 +11,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { DatePicker } from "../components/ui/datepicker";
-import { EmployeeCombobox } from "../components/ui/employeecombobox";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Command,
+  CommandInput,
+  CommandGroup,
+  CommandItem,
+  CommandEmpty,
+} from "@/components/ui/command";
+import { format } from "date-fns";
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-// Replace with real employee data if needed
+// Sample employees
 const employeeList = [
   { value: "john", label: "John" },
   { value: "jane", label: "Jane" },
@@ -28,6 +42,8 @@ export default function CreateStoreFront({ onCreate }) {
   const [endDate, setEndDate] = useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [memo, setMemo] = useState("");
+  const [datePopover, setDatePopover] = useState({ start: false, end: false });
+  const [employeePopover, setEmployeePopover] = useState(false);
 
   const handleSubmit = () => {
     onCreate?.({
@@ -58,9 +74,8 @@ export default function CreateStoreFront({ onCreate }) {
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Timeline-like vertical form */}
           <div className="flex flex-col gap-5 border-l-2 border-gray-300 pl-4 relative">
-            {/* Store name */}
+            {/* Store Name */}
             <StepMarker label="ชื่อร้านค้า">
               <Input
                 value={storeName}
@@ -71,21 +86,116 @@ export default function CreateStoreFront({ onCreate }) {
 
             {/* Start Date */}
             <StepMarker label="วันที่เริ่มต้น">
-              <DatePicker date={startDate} setDate={setStartDate} />
+              <Popover
+                open={datePopover.start}
+                onOpenChange={(open) =>
+                  setDatePopover((prev) => ({ ...prev, start: open }))
+                }
+              >
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-left font-normal"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {startDate
+                      ? format(startDate, "yyyy-MM-dd")
+                      : "เลือกวันที่เริ่มต้น"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={startDate}
+                    onSelect={(date) => {
+                      setStartDate(date);
+                      setDatePopover((prev) => ({ ...prev, start: false }));
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </StepMarker>
 
             {/* End Date */}
             <StepMarker label="วันที่สิ้นสุด">
-              <DatePicker date={endDate} setDate={setEndDate} />
+              <Popover
+                open={datePopover.end}
+                onOpenChange={(open) =>
+                  setDatePopover((prev) => ({ ...prev, end: open }))
+                }
+              >
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-left font-normal"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {endDate
+                      ? format(endDate, "yyyy-MM-dd")
+                      : "เลือกวันที่สิ้นสุด"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={endDate}
+                    onSelect={(date) => {
+                      setEndDate(date);
+                      setDatePopover((prev) => ({ ...prev, end: false }));
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </StepMarker>
 
             {/* Employee */}
             <StepMarker label="พนักงานที่รับผิดชอบ">
-              <EmployeeCombobox
-                employees={employeeList}
-                value={selectedEmployee}
-                setValue={setSelectedEmployee}
-              />
+              <Popover open={employeePopover} onOpenChange={setEmployeePopover}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className="w-full justify-between"
+                  >
+                    {selectedEmployee
+                      ? employeeList.find(
+                          (emp) => emp.value === selectedEmployee
+                        )?.label
+                      : "เลือกพนักงาน"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command>
+                    <CommandInput placeholder="ค้นหาพนักงาน..." />
+                    <CommandEmpty>ไม่พบพนักงาน</CommandEmpty>
+                    <CommandGroup>
+                      {employeeList.map((emp) => (
+                        <CommandItem
+                          key={emp.value}
+                          value={emp.value}
+                          onSelect={(currentValue) => {
+                            setSelectedEmployee(currentValue);
+                            setEmployeePopover(false);
+                          }}
+                        >
+                          {emp.label}
+                          <Check
+                            className={cn(
+                              "ml-auto h-4 w-4",
+                              selectedEmployee === emp.value
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </StepMarker>
 
             {/* Memo */}
