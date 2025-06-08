@@ -33,7 +33,7 @@ export default function OwnerProfile() {
         `https://jewelmatters-backend-cold-fog-2174.fly.dev/api/getPhoneNumber/${profile.userId}`
       );
       const data = await res.json();
-      setPhoneNumber(data.phoneNumber || "");
+      setPhoneNumber(data.phonenumber || "");
     } catch (err) {
       console.error("Failed to fetch phone number:", err);
     } finally {
