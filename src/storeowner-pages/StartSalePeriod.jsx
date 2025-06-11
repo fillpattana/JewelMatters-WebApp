@@ -149,7 +149,7 @@ export default function StartSalePeriod() {
                         <img
                           src={editIcon}
                           alt="แก้ไข"
-                          className="w-6 h-6 object-contain"
+                          className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
                         />
                       </Button>
 
@@ -165,7 +165,7 @@ export default function StartSalePeriod() {
                         <img
                           src={deleteIcon}
                           alt="ลบ"
-                          className="w-6 h-6 object-contain"
+                          className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
                         />
                       </Button>
                     </div>
