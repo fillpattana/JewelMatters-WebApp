@@ -44,7 +44,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-export default function CurrentStorefronts({ storefronts }) {
+import UpArrowIcon from "@/assets/up-arrows-icon.png";
+import DownArrowIcon from "@/assets/down-arrows-icon.png";
+
+export default function StartSalePeriod({ storefronts = [] }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [toDelete, setToDelete] = useState(null);
 
