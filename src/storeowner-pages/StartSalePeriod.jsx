@@ -47,9 +47,6 @@ import { Card } from "@/components/ui/card";
 import editIcon from "@/assets/edit-icon.png";
 import deleteIcon from "@/assets/delete-icon.png";
 
-const [editDialogOpen, setEditDialogOpen] = useState(false);
-const [storefrontToEdit, setStorefrontToEdit] = useState(null);
-
 // Mock data simulating PostgreSQL timestamps
 const mockStorefronts = [
   {
@@ -86,6 +83,8 @@ function formatThaiDate(dateString) {
 }
 
 export default function StartSalePeriod({ storefronts = mockStorefronts }) {
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [storefrontToEdit, setStorefrontToEdit] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [toDelete, setToDelete] = useState(null);
 
