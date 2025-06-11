@@ -43,12 +43,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 import editIcon from "@/assets/edit-icon.png";
 import deleteIcon from "@/assets/delete-icon.png";
 
-// Mock data simulating PostgreSQL timestamps
-const mockStorefronts = [
+const initialMockStorefronts = [
   {
     id: "sf1",
     name: "ร้านทองเจ๊สมศรี",
@@ -82,24 +83,30 @@ function formatThaiDate(dateString) {
   }).format(date);
 }
 
-export default function StartSalePeriod({ storefronts = mockStorefronts }) {
+export default function StartSalePeriod() {
+  const [storefronts, setStorefronts] = useState(initialMockStorefronts);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [storefrontToEdit, setStorefrontToEdit] = useState(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [toDelete, setToDelete] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const openDialog = (storefront) => {
-    setToDelete(storefront);
-    setDialogOpen(true);
+  const [storefrontToEdit, setStorefrontToEdit] = useState(null);
+  const [storefrontToDelete, setStorefrontToDelete] = useState(null);
+
+  // Handle Edit Save
+  const handleEditStorefront = () => {
+    setStorefronts((prev) =>
+      prev.map((sf) => (sf.id === storefrontToEdit.id ? storefrontToEdit : sf))
+    );
+    setEditDialogOpen(false);
+    setStorefrontToEdit(null);
   };
 
-  const confirmDelete = () => {
-    if (toDelete) {
-      console.log("Deleting storefront:", toDelete.id);
-      // TODO: Replace with your actual delete logic
-      setDialogOpen(false);
-      setToDelete(null);
-    }
+  // Handle Delete
+  const handleDeleteStorefront = () => {
+    setStorefronts((prev) =>
+      prev.filter((sf) => sf.id !== storefrontToDelete.id)
+    );
+    setDeleteDialogOpen(false);
+    setStorefrontToDelete(null);
   };
 
   return (
@@ -135,14 +142,14 @@ export default function StartSalePeriod({ storefronts = mockStorefronts }) {
                         size="icon"
                         className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
                         onClick={() => {
-                          setStorefrontToEdit(storefront);
+                          setStorefrontToEdit({ ...storefront });
                           setEditDialogOpen(true);
                         }}
                       >
                         <img
                           src={editIcon}
                           alt="แก้ไข"
-                          className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
+                          className="w-6 h-6 object-contain"
                         />
                       </Button>
 
@@ -150,12 +157,15 @@ export default function StartSalePeriod({ storefronts = mockStorefronts }) {
                         variant="outline"
                         size="icon"
                         className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
-                        onClick={() => openDialog(storefront)}
+                        onClick={() => {
+                          setStorefrontToDelete(storefront);
+                          setDeleteDialogOpen(true);
+                        }}
                       >
                         <img
                           src={deleteIcon}
                           alt="ลบ"
-                          className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
+                          className="w-6 h-6 object-contain"
                         />
                       </Button>
                     </div>
@@ -167,48 +177,80 @@ export default function StartSalePeriod({ storefronts = mockStorefronts }) {
         </Accordion>
       )}
 
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>ยืนยันการลบ</AlertDialogTitle>
-            <AlertDialogDescription>
-              ต้องการลบร้านค้า “{toDelete?.name}” หรือไม่?
-              <br />
-              ข้อมูลที่เกี่ยวข้องกับร้านค้านี้จะถูกลบถาวร
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>ลบ</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
+      {/* Edit Dialog */}
       {storefrontToEdit && (
         <AlertDialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>แก้ไขร้านค้า</AlertDialogTitle>
             </AlertDialogHeader>
-
-            <div className="space-y-3 text-sm text-gray-700">
-              <p>ขออภัย ฟีเจอร์การแก้ไขยังไม่พร้อมใช้งานในตอนนี้</p>
-              <p>
-                ชื่อร้าน: <strong>{storefrontToEdit.name}</strong>
-              </p>
-              <p>
-                ยอดขาย:{" "}
-                <strong>{storefrontToEdit.totalSales.toLocaleString()}</strong>{" "}
-                บาท
-              </p>
+            <div className="space-y-3">
+              <div>
+                <Label>ชื่อร้าน</Label>
+                <Input
+                  value={storefrontToEdit.name}
+                  onChange={(e) =>
+                    setStorefrontToEdit({
+                      ...storefrontToEdit,
+                      name: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <Label>จำนวนสินค้า</Label>
+                <Input
+                  type="number"
+                  value={storefrontToEdit.totalItems}
+                  onChange={(e) =>
+                    setStorefrontToEdit({
+                      ...storefrontToEdit,
+                      totalItems: parseInt(e.target.value),
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <Label>ยอดขายรวม</Label>
+                <Input
+                  type="number"
+                  value={storefrontToEdit.totalSales}
+                  onChange={(e) =>
+                    setStorefrontToEdit({
+                      ...storefrontToEdit,
+                      totalSales: parseFloat(e.target.value),
+                    })
+                  }
+                />
+              </div>
             </div>
-
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-gray-300 hover:bg-gray-400">
-                ปิด
-              </AlertDialogCancel>
-              {/* <AlertDialogAction onClick={handleEdit}>ยืนยัน</AlertDialogAction> */}
+              <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
+              <AlertDialogAction onClick={handleEditStorefront}>
+                ยืนยัน
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      {storefrontToDelete && (
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>ยืนยันการลบ</AlertDialogTitle>
+              <AlertDialogDescription>
+                ต้องการลบร้านค้า “{storefrontToDelete.name}” หรือไม่?
+                <br />
+                ข้อมูลที่เกี่ยวข้องจะถูกลบถาวร
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteStorefront}>
+                ลบ
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
