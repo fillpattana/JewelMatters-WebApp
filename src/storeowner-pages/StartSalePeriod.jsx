@@ -44,8 +44,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-import UpArrowIcon from "@/assets/up-arrows-icon.png";
-import DownArrowIcon from "@/assets/down-arrows-icon.png";
+import editIcon from "@/assets/edit-icon.png";
+import deleteIcon from "@/assets/delete-icon.png";
+
+const [editDialogOpen, setEditDialogOpen] = useState(false);
+const [storefrontToEdit, setStorefrontToEdit] = useState(null);
 
 // Mock data simulating PostgreSQL timestamps
 const mockStorefronts = [
@@ -128,12 +131,33 @@ export default function StartSalePeriod({ storefronts = mockStorefronts }) {
                       {storefront.totalSales.toLocaleString()} บาท
                     </div>
                     <div className="flex gap-2 mt-4">
-                      <Button variant="outline">แก้ไข</Button>
                       <Button
-                        variant="destructive"
+                        variant="outline"
+                        size="icon"
+                        className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
+                        onClick={() => {
+                          setStorefrontToEdit(storefront);
+                          setEditDialogOpen(true);
+                        }}
+                      >
+                        <img
+                          src={editIcon}
+                          alt="แก้ไข"
+                          className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
+                        />
+                      </Button>
+
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
                         onClick={() => openDialog(storefront)}
                       >
-                        ลบ
+                        <img
+                          src={deleteIcon}
+                          alt="ลบ"
+                          className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
+                        />
                       </Button>
                     </div>
                   </div>
@@ -161,6 +185,35 @@ export default function StartSalePeriod({ storefronts = mockStorefronts }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {storefrontToEdit && (
+        <AlertDialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>แก้ไขร้านค้า</AlertDialogTitle>
+            </AlertDialogHeader>
+
+            <div className="space-y-3 text-sm text-gray-700">
+              <p>ขออภัย ฟีเจอร์การแก้ไขยังไม่พร้อมใช้งานในตอนนี้</p>
+              <p>
+                ชื่อร้าน: <strong>{storefrontToEdit.name}</strong>
+              </p>
+              <p>
+                ยอดขาย:{" "}
+                <strong>{storefrontToEdit.totalSales.toLocaleString()}</strong>{" "}
+                บาท
+              </p>
+            </div>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-gray-300 hover:bg-gray-400">
+                ปิด
+              </AlertDialogCancel>
+              {/* <AlertDialogAction onClick={handleEdit}>ยืนยัน</AlertDialogAction> */}
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </section>
   );
 }
