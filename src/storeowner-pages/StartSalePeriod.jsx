@@ -47,7 +47,42 @@ import { Card } from "@/components/ui/card";
 import UpArrowIcon from "@/assets/up-arrows-icon.png";
 import DownArrowIcon from "@/assets/down-arrows-icon.png";
 
-export default function StartSalePeriod({ storefronts = [] }) {
+// Mock data simulating PostgreSQL timestamps
+const mockStorefronts = [
+  {
+    id: "sf1",
+    name: "ร้านทองเจ๊สมศรี",
+    startDate: "2025-06-10T08:30:00.000Z",
+    totalItems: 45,
+    totalSales: 125000,
+  },
+  {
+    id: "sf2",
+    name: "ร้านทองบางกอก",
+    startDate: "2025-06-09T10:15:00.000Z",
+    totalItems: 30,
+    totalSales: 98000,
+  },
+  {
+    id: "sf3",
+    name: "ร้านทองเยาวราช",
+    startDate: "2025-06-08T13:45:00.000Z",
+    totalItems: 60,
+    totalSales: 189500,
+  },
+];
+
+// Helper to format ISO string to Thai readable format
+function formatThaiDate(dateString) {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("th-TH", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
+
+export default function StartSalePeriod({ storefronts = mockStorefronts }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [toDelete, setToDelete] = useState(null);
 
@@ -79,7 +114,7 @@ export default function StartSalePeriod({ storefronts = [] }) {
                   <div className="flex flex-col text-start">
                     <span className="font-semibold">{storefront.name}</span>
                     <span className="text-sm text-gray-500">
-                      เริ่มขายเมื่อ {storefront.startDate}
+                      เริ่มขายเมื่อ {formatThaiDate(storefront.startDate)}
                     </span>
                   </div>
                 </AccordionTrigger>
@@ -89,7 +124,8 @@ export default function StartSalePeriod({ storefronts = [] }) {
                       <strong>จำนวนสินค้า:</strong> {storefront.totalItems}
                     </div>
                     <div className="text-sm text-gray-700">
-                      <strong>ยอดขายรวม:</strong> {storefront.totalSales} บาท
+                      <strong>ยอดขายรวม:</strong>{" "}
+                      {storefront.totalSales.toLocaleString()} บาท
                     </div>
                     <div className="flex gap-2 mt-4">
                       <Button variant="outline">แก้ไข</Button>
