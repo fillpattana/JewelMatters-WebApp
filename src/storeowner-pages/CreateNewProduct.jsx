@@ -276,7 +276,7 @@ const CreateNewProduct = () => {
             </div>
 
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-red-600 hover:bg-red-700 text-white">
+              <AlertDialogCancel className="bg-gray-300 hover:bg-gray-400">
                 ยกเลิก
               </AlertDialogCancel>
               <AlertDialogAction

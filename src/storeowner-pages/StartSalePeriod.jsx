@@ -225,8 +225,13 @@ export default function StartSalePeriod() {
               </div>
             </div>
             <AlertDialogFooter>
-              <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-              <AlertDialogAction onClick={handleEditStorefront}>
+              <AlertDialogCancel className="bg-gray-300 hover:bg-gray-400">
+                ยกเลิก
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-[#192F7B] hover:bg-[#16296b] text-white"
+                onClick={handleEditStorefront}
+              >
                 ยืนยัน
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -239,17 +244,28 @@ export default function StartSalePeriod() {
         <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>ยืนยันการลบ</AlertDialogTitle>
+              <AlertDialogTitle>ยืนยันการลบร้านค้า</AlertDialogTitle>
               <AlertDialogDescription>
-                ต้องการลบร้านค้า “{storefrontToDelete.name}” หรือไม่?
+                ยืนยันที่จะลบข้อมูลของสาขา{" "}
+                <span className="font-semibold">{storefrontToDelete.name}</span>{" "}
+                หรือไม่?
                 <br />
-                ข้อมูลที่เกี่ยวข้องจะถูกลบถาวร
+                การลบจะ{" "}
+                <span className="font-semibold">
+                  ไม่สามารถกู้คืนข้อมูลกลับมา
+                </span>{" "}
+                ได้ในภายหลัง
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteStorefront}>
-                ลบ
+              <AlertDialogCancel className="bg-gray-300 hover:bg-gray-400">
+                ยกเลิก
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={handleDeleteStorefront}
+              >
+                ลบร้านค้า
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
