@@ -50,6 +50,8 @@ import { Badge } from "@/components/ui/badge";
 import editIcon from "@/assets/edit-icon.png";
 import deleteIcon from "@/assets/delete-icon.png";
 
+//revert commit check
+
 const initialMockStorefronts = [
   {
     id: "sf1",
