@@ -135,10 +135,8 @@ export default function CurrentStoreFrontList() {
           <Switch
             checked={sortOrder === "asc"}
             onCheckedChange={toggleSortOrder}
-            className="data-[state=checked]:bg-[#202C7C] peer"
-          >
-            <div className="peer-data-[state=checked]:bg-white" />
-          </Switch>
+            className="data-[state=checked]:bg-[#202C7C]"
+          />
         </Label>
       </div>
 
