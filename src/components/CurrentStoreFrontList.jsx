@@ -135,7 +135,10 @@ export default function CurrentStoreFrontList() {
           <Switch
             checked={sortOrder === "asc"}
             onCheckedChange={toggleSortOrder}
-          />
+            className="data-[state=checked]:bg-[#202C7C] data-[state=unchecked]:bg-gray-300 relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out"
+          >
+            <span className="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0 data-[state=checked]:translate-x-5" />
+          </Switch>
         </Label>
       </div>
 
