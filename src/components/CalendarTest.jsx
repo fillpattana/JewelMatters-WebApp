@@ -6,6 +6,8 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import { th } from "date-fns/locale";
 
 export default function CalendarTest() {
   const [date, setDate] = useState(new Date());
