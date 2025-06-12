@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-export function CalendarTest() {
+export default function CalendarTest() {
   const [date, setDate] = useState(new Date());
 
   return (
