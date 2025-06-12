@@ -180,6 +180,14 @@ export default function CurrentStoreFrontList() {
                       <strong>ยอดขายรวม:</strong>{" "}
                       {storefront.totalSales.toLocaleString()} บาท
                     </div>
+                    <div className="text-sm text-gray-700">
+                      <strong>วันที่เริ่มต้น:</strong>{" "}
+                      {formatThaiDate(storefront.startDate)}
+                    </div>
+                    <div className="text-sm text-gray-700">
+                      <strong>วันที่สิ้นสุด:</strong>{" "}
+                      {formatThaiDate(storefront.endDate)}
+                    </div>
                     <div className="flex items-center justify-between mt-4">
                       <div className="flex gap-2">
                         <Button
