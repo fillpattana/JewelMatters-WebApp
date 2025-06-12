@@ -1,172 +1,321 @@
 import React, { useState } from "react";
 import {
   Accordion,
-  AccordionContent,
   AccordionItem,
   AccordionTrigger,
+  AccordionContent,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
   AlertDialogCancel,
   AlertDialogAction,
-  AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import deleteIcon from "@/assets/delete-icon.png";
-import editIcon from "@/assets/edit-icon.png";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 
-const sampleStorefronts = [
+import editIcon from "@/assets/edit-icon.png";
+import deleteIcon from "@/assets/delete-icon.png";
+
+const initialMockStorefronts = [
   {
-    id: "sf-001",
-    name: "สาขาอโศก",
-    startDate: "2025-06-01",
-    endDate: "2025-06-20",
-    totalSales: 20340,
-    totalProducts: 150,
-    memo: "ยอดขายพุ่งแรง",
+    id: "sf1",
+    name: "วานิชเพชรบุรี",
+    startDate: "2025-06-10T08:30:00.000Z",
+    endDate: "2025-06-14T08:30:00.000Z",
+    totalItems: 45,
+    totalSales: 125000,
   },
   {
-    id: "sf-002",
-    name: "สาขาพระราม 9",
-    startDate: "2025-06-03",
-    endDate: "2025-06-10",
-    totalSales: 10500,
-    totalProducts: 80,
-    memo: "ทดลองพนักงานใหม่",
+    id: "sf2",
+    name: "ศูนย์แจ้งวัฒนะ",
+    startDate: "2025-06-09T10:15:00.000Z",
+    endDate: "2025-06-13T10:15:00.000Z",
+    totalItems: 30,
+    totalSales: 98000,
+  },
+  {
+    id: "sf3",
+    name: "ปัญญาพิวัตณ์ CP",
+    startDate: "2025-06-08T13:45:00.000Z",
+    endDate: "2025-06-12T13:45:00.000Z",
+    totalItems: 60,
+    totalSales: 189500,
   },
 ];
 
-function calculateRemainingDays(endDate) {
+// Helper to format ISO string to Thai readable format
+function formatThaiDate(dateString) {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("th-TH", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
+
+// Calculate days remaining
+function getDaysRemaining(endDate) {
   const today = new Date();
   const end = new Date(endDate);
   const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
-  return diff > 0 ? diff : 0;
+  return diff;
 }
 
 export default function CurrentStoreFrontList() {
-  const [storefronts, setStorefronts] = useState(sampleStorefronts);
-  const [editingStore, setEditingStore] = useState(null);
-  const [tempMemo, setTempMemo] = useState("");
+  const [storefronts, setStorefronts] = useState(
+    [...initialMockStorefronts].sort(
+      (a, b) => new Date(b.startDate) - new Date(a.startDate)
+    )
+  );
+  const [sortOrder, setSortOrder] = useState("desc"); // 'asc' or 'desc'
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [storefrontToEdit, setStorefrontToEdit] = useState(null);
+  const [storefrontToDelete, setStorefrontToDelete] = useState(null);
 
-  const handleDelete = (id) => {
-    setStorefronts((prev) => prev.filter((sf) => sf.id !== id));
-  };
-
-  const handleSave = () => {
+  // Toggle sort order and re-sort
+  const toggleSortOrder = () => {
+    const newOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newOrder);
     setStorefronts((prev) =>
-      prev.map((sf) =>
-        sf.id === editingStore.id ? { ...sf, memo: tempMemo } : sf
+      [...prev].sort((a, b) =>
+        newOrder === "asc"
+          ? new Date(a.startDate) - new Date(b.startDate)
+          : new Date(b.startDate) - new Date(a.startDate)
       )
     );
-    setEditingStore(null);
+  };
+
+  // Handle Edit Save
+  const handleEditStorefront = () => {
+    const updated = storefronts.map((sf) =>
+      sf.id === storefrontToEdit.id ? storefrontToEdit : sf
+    );
+    const sorted = [...updated].sort((a, b) =>
+      sortOrder === "asc"
+        ? new Date(a.startDate) - new Date(b.startDate)
+        : new Date(b.startDate) - new Date(a.startDate)
+    );
+    setStorefronts(sorted);
+    setEditDialogOpen(false);
+    setStorefrontToEdit(null);
+  };
+
+  // Handle Delete
+  const handleDeleteStorefront = () => {
+    setStorefronts((prev) =>
+      [...prev.filter((sf) => sf.id !== storefrontToDelete.id)].sort((a, b) =>
+        sortOrder === "asc"
+          ? new Date(a.startDate) - new Date(b.startDate)
+          : new Date(b.startDate) - new Date(a.startDate)
+      )
+    );
+    setDeleteDialogOpen(false);
+    setStorefrontToDelete(null);
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-bold">ร้านค้าปัจจุบัน</h2>
-      <Accordion type="single" collapsible className="w-full">
-        {storefronts.map((store) => (
-          <AccordionItem key={store.id} value={store.id}>
-            <AccordionTrigger className="flex justify-between items-center gap-2">
-              <span className="text-left">{store.name}</span>
-              <Badge variant="success">
-                สิ้นสุดลงใน {calculateRemainingDays(store.endDate)} วัน
-              </Badge>
-            </AccordionTrigger>
-            <AccordionContent className="p-4 space-y-2 bg-gray-50 rounded-md">
-              <div>
-                📅 <strong>วันที่เริ่มต้น:</strong> {store.startDate}
-              </div>
-              <div>
-                📅 <strong>วันที่สิ้นสุด:</strong> {store.endDate}
-              </div>
-              <div>
-                💰 <strong>ยอดขายรวม:</strong> ฿
-                {store.totalSales.toLocaleString()}
-              </div>
-              <div>
-                📦 <strong>ยอดรวมจำนวนสินค้าที่ออก:</strong>{" "}
-                {store.totalProducts}
-              </div>
-              <div>
-                📝 <strong>บันทึกช่วยจำ:</strong> {store.memo}
-              </div>
+    <section className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold">ร้านค้าที่กำลังขายอยู่</h2>
+        <Label className="flex items-center gap-2 cursor-pointer">
+          <span className="text-sm text-gray-700">
+            {sortOrder === "asc" ? "เก่าไปใหม่" : "ใหม่ไปเก่า"}
+          </span>
+          <Switch
+            checked={sortOrder === "asc"}
+            onCheckedChange={toggleSortOrder}
+          />
+        </Label>
+      </div>
 
-              <div className="flex gap-3 mt-4">
-                {/* Edit Button */}
-                <Button
-                  variant="secondary"
-                  onClick={() => {
-                    setTempMemo(store.memo);
-                    setEditingStore(store);
-                  }}
-                >
-                  <img src={editIcon} alt="edit" className="w-4 h-4 mr-2" />
-                  แก้ไข
-                </Button>
+      {storefronts.length === 0 ? (
+        <p className="text-gray-500">ยังไม่มีร้านค้าที่เปิดขายในขณะนี้</p>
+      ) : (
+        <Accordion type="multiple" className="w-full space-y-4">
+          {storefronts.map((storefront) => (
+            <AccordionItem key={storefront.id} value={storefront.id}>
+              <Card className="p-4">
+                <AccordionTrigger className="w-full text-left">
+                  <div className="flex flex-col text-start">
+                    <span className="font-semibold">{storefront.name}</span>
+                    <span className="text-sm text-gray-500">
+                      เริ่มขายเมื่อ {formatThaiDate(storefront.startDate)}
+                    </span>
+                    <span>
+                      <Badge
+                        variant="outline"
+                        className={
+                          getDaysRemaining(storefront.endDate) <= 0
+                            ? "bg-gray-400 text-white"
+                            : getDaysRemaining(storefront.endDate) <= 1
+                              ? "bg-orange-500 text-white"
+                              : "bg-green-500 text-white"
+                        }
+                      >
+                        {getDaysRemaining(storefront.endDate) > 0
+                          ? `สิ้นสุดลงใน ${getDaysRemaining(storefront.endDate)} วัน`
+                          : "สิ้นสุดแล้ว"}
+                      </Badge>
+                    </span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="mt-4 flex flex-col gap-2">
+                    <div className="text-sm text-gray-700">
+                      <strong>จำนวนสินค้า:</strong> {storefront.totalItems}
+                    </div>
+                    <div className="text-sm text-gray-700">
+                      <strong>ยอดขายรวม:</strong>{" "}
+                      {storefront.totalSales.toLocaleString()} บาท
+                    </div>
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
+                          onClick={() => {
+                            setStorefrontToEdit({ ...storefront });
+                            setEditDialogOpen(true);
+                          }}
+                        >
+                          <img
+                            src={editIcon}
+                            alt="แก้ไข"
+                            className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
+                          />
+                        </Button>
 
-                {/* Delete Button */}
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="destructive">
-                      <img
-                        src={deleteIcon}
-                        alt="delete"
-                        className="w-4 h-4 mr-2"
-                      />
-                      ลบหน้าร้าน
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>ยืนยันการลบ</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        คุณแน่ใจหรือไม่ว่าต้องการลบหน้าร้านนี้?
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDelete(store.id)}>
-                        ลบ
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
+                          onClick={() => {
+                            setStorefrontToDelete(storefront);
+                            setDeleteDialogOpen(true);
+                          }}
+                        >
+                          <img
+                            src={deleteIcon}
+                            alt="ลบ"
+                            className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
+                          />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </Card>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      )}
 
       {/* Edit Dialog */}
-      <AlertDialog
-        open={!!editingStore}
-        onOpenChange={() => setEditingStore(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              แก้ไขบันทึกของ {editingStore?.name}
-            </AlertDialogTitle>
-          </AlertDialogHeader>
-          <Input
-            value={tempMemo}
-            onChange={(e) => setTempMemo(e.target.value)}
-            placeholder="ระบุบันทึกช่วยจำใหม่..."
-          />
-          <AlertDialogFooter>
-            <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-            <AlertDialogAction onClick={handleSave}>บันทึก</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+      {storefrontToEdit && (
+        <AlertDialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>แก้ไขร้านค้า</AlertDialogTitle>
+            </AlertDialogHeader>
+            <div className="space-y-3">
+              <div>
+                <Label>ชื่อร้าน</Label>
+                <Input
+                  value={storefrontToEdit.name}
+                  onChange={(e) =>
+                    setStorefrontToEdit({
+                      ...storefrontToEdit,
+                      name: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <Label>จำนวนสินค้า</Label>
+                <Input
+                  type="number"
+                  value={storefrontToEdit.totalItems}
+                  onChange={(e) =>
+                    setStorefrontToEdit({
+                      ...storefrontToEdit,
+                      totalItems: parseInt(e.target.value),
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <Label>ยอดขายรวม</Label>
+                <Input
+                  type="number"
+                  value={storefrontToEdit.totalSales}
+                  onChange={(e) =>
+                    setStorefrontToEdit({
+                      ...storefrontToEdit,
+                      totalSales: parseFloat(e.target.value),
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-gray-300 hover:bg-gray-400">
+                ยกเลิก
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-[#192F7B] hover:bg-[#16296b] text-white"
+                onClick={handleEditStorefront}
+              >
+                ยืนยัน
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      {storefrontToDelete && (
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>ยืนยันการลบร้านค้า</AlertDialogTitle>
+              <AlertDialogDescription>
+                ยืนยันที่จะลบข้อมูลของสาขา{" "}
+                <span className="font-semibold">{storefrontToDelete.name}</span>{" "}
+                หรือไม่?
+                <br />
+                การลบจะ{" "}
+                <span className="font-semibold">
+                  ไม่สามารถกู้คืนข้อมูลกลับมา
+                </span>{" "}
+                ได้ในภายหลัง
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-gray-300 hover:bg-gray-400">
+                ยกเลิก
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={handleDeleteStorefront}
+              >
+                ลบร้านค้า
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+    </section>
   );
 }
