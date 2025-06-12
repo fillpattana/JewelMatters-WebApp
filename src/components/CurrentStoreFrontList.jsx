@@ -22,6 +22,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { th } from "date-fns/locale";
 
 import editIcon from "@/assets/edit-icon.png";
 import deleteIcon from "@/assets/delete-icon.png";
@@ -232,6 +240,67 @@ export default function CurrentStoreFrontList() {
       )}
 
       {/* Edit Dialog */}
+      {/* {storefrontToEdit && (
+        <AlertDialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>แก้ไขร้านค้า</AlertDialogTitle>
+            </AlertDialogHeader>
+            <div className="space-y-3">
+              <div>
+                <Label>ชื่อร้าน</Label>
+                <Input
+                  value={storefrontToEdit.name}
+                  onChange={(e) =>
+                    setStorefrontToEdit({
+                      ...storefrontToEdit,
+                      name: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <Label>จำนวนสินค้า</Label>
+                <Input
+                  type="number"
+                  value={storefrontToEdit.totalItems}
+                  onChange={(e) =>
+                    setStorefrontToEdit({
+                      ...storefrontToEdit,
+                      totalItems: parseInt(e.target.value),
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <Label>ยอดขายรวม</Label>
+                <Input
+                  type="number"
+                  value={storefrontToEdit.totalSales}
+                  onChange={(e) =>
+                    setStorefrontToEdit({
+                      ...storefrontToEdit,
+                      totalSales: parseFloat(e.target.value),
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-gray-300 hover:bg-gray-400">
+                ยกเลิก
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-[#192F7B] hover:bg-[#16296b] text-white"
+                onClick={handleEditStorefront}
+              >
+                ยืนยัน
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )} */}
+
       {storefrontToEdit && (
         <AlertDialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
           <AlertDialogContent>
@@ -276,6 +345,76 @@ export default function CurrentStoreFrontList() {
                     })
                   }
                 />
+              </div>
+
+              {/* START DATE PICKER */}
+              <div>
+                <Label>วันที่เริ่มต้น</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={`w-full justify-start text-left font-normal ${
+                        !storefrontToEdit.startDate
+                          ? "text-muted-foreground"
+                          : ""
+                      }`}
+                    >
+                      {storefrontToEdit.startDate
+                        ? format(new Date(storefrontToEdit.startDate), "PPP", {
+                            locale: th,
+                          })
+                        : "เลือกวันที่เริ่มต้น"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={new Date(storefrontToEdit.startDate)}
+                      onSelect={(date) =>
+                        setStorefrontToEdit({
+                          ...storefrontToEdit,
+                          startDate: date.toISOString(),
+                        })
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              {/* END DATE PICKER */}
+              <div>
+                <Label>วันที่สิ้นสุด</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={`w-full justify-start text-left font-normal ${
+                        !storefrontToEdit.endDate ? "text-muted-foreground" : ""
+                      }`}
+                    >
+                      {storefrontToEdit.endDate
+                        ? format(new Date(storefrontToEdit.endDate), "PPP", {
+                            locale: th,
+                          })
+                        : "เลือกวันที่สิ้นสุด"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={new Date(storefrontToEdit.endDate)}
+                      onSelect={(date) =>
+                        setStorefrontToEdit({
+                          ...storefrontToEdit,
+                          endDate: date.toISOString(),
+                        })
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
             <AlertDialogFooter>
