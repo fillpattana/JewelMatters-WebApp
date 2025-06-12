@@ -45,6 +45,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 
 import editIcon from "@/assets/edit-icon.png";
 import deleteIcon from "@/assets/delete-icon.png";
@@ -52,22 +53,25 @@ import deleteIcon from "@/assets/delete-icon.png";
 const initialMockStorefronts = [
   {
     id: "sf1",
-    name: "ร้านทองเจ๊สมศรี",
+    name: "วานิชเพชรบุรี",
     startDate: "2025-06-10T08:30:00.000Z",
+    endDate: "2025-06-14T08:30:00.000Z",
     totalItems: 45,
     totalSales: 125000,
   },
   {
     id: "sf2",
-    name: "ร้านทองบางกอก",
+    name: "ศูนย์แจ้งวัฒนะ",
     startDate: "2025-06-09T10:15:00.000Z",
+    endDate: "2025-06-13T10:15:00.000Z",
     totalItems: 30,
     totalSales: 98000,
   },
   {
     id: "sf3",
-    name: "ร้านทองเยาวราช",
+    name: "ปัญญาพิวัตณ์ CP",
     startDate: "2025-06-08T13:45:00.000Z",
+    endDate: "2025-06-12T13:45:00.000Z",
     totalItems: 60,
     totalSales: 189500,
   },
@@ -83,19 +87,50 @@ function formatThaiDate(dateString) {
   }).format(date);
 }
 
+// Calculate days remaining
+function getDaysRemaining(endDate) {
+  const today = new Date();
+  const end = new Date(endDate);
+  const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+  return diff;
+}
+
 export default function StartSalePeriod() {
-  const [storefronts, setStorefronts] = useState(initialMockStorefronts);
+  const [storefronts, setStorefronts] = useState(
+    [...initialMockStorefronts].sort(
+      (a, b) => new Date(b.startDate) - new Date(a.startDate)
+    )
+  );
+  const [sortOrder, setSortOrder] = useState("desc"); // 'asc' or 'desc'
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-
   const [storefrontToEdit, setStorefrontToEdit] = useState(null);
   const [storefrontToDelete, setStorefrontToDelete] = useState(null);
 
+  // Toggle sort order and re-sort
+  const toggleSortOrder = () => {
+    const newOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newOrder);
+    setStorefronts((prev) =>
+      [...prev].sort((a, b) =>
+        newOrder === "asc"
+          ? new Date(a.startDate) - new Date(b.startDate)
+          : new Date(b.startDate) - new Date(a.startDate)
+      )
+    );
+  };
+
   // Handle Edit Save
   const handleEditStorefront = () => {
-    setStorefronts((prev) =>
-      prev.map((sf) => (sf.id === storefrontToEdit.id ? storefrontToEdit : sf))
+    const updated = storefronts.map((sf) =>
+      sf.id === storefrontToEdit.id ? storefrontToEdit : sf
     );
+    const sorted = [...updated].sort((a, b) =>
+      sortOrder === "asc"
+        ? new Date(a.startDate) - new Date(b.startDate)
+        : new Date(b.startDate) - new Date(a.startDate)
+    );
+    setStorefronts(sorted);
     setEditDialogOpen(false);
     setStorefrontToEdit(null);
   };
@@ -103,7 +138,11 @@ export default function StartSalePeriod() {
   // Handle Delete
   const handleDeleteStorefront = () => {
     setStorefronts((prev) =>
-      prev.filter((sf) => sf.id !== storefrontToDelete.id)
+      [...prev.filter((sf) => sf.id !== storefrontToDelete.id)].sort((a, b) =>
+        sortOrder === "asc"
+          ? new Date(a.startDate) - new Date(b.startDate)
+          : new Date(b.startDate) - new Date(a.startDate)
+      )
     );
     setDeleteDialogOpen(false);
     setStorefrontToDelete(null);
@@ -111,7 +150,13 @@ export default function StartSalePeriod() {
 
   return (
     <section className="space-y-6">
-      <h2 className="text-xl font-bold">ร้านค้าที่กำลังขายอยู่</h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold">ร้านค้าที่กำลังขายอยู่</h2>
+        <Button variant="outline" onClick={toggleSortOrder}>
+          {sortOrder === "asc" ? "เก่าไปใหม่" : "ใหม่ไปเก่า"}
+        </Button>
+      </div>
+
       {storefronts.length === 0 ? (
         <p className="text-gray-500">ยังไม่มีร้านค้าที่เปิดขายในขณะนี้</p>
       ) : (
@@ -136,38 +181,55 @@ export default function StartSalePeriod() {
                       <strong>ยอดขายรวม:</strong>{" "}
                       {storefront.totalSales.toLocaleString()} บาท
                     </div>
-                    <div className="flex gap-2 mt-4">
-                      <Button
+                    <div className="flex items-center justify-between mt-4">
+                      <Badge
                         variant="outline"
-                        size="icon"
-                        className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
-                        onClick={() => {
-                          setStorefrontToEdit({ ...storefront });
-                          setEditDialogOpen(true);
-                        }}
+                        className={
+                          getDaysRemaining(storefront.endDate) <= 0
+                            ? "bg-gray-400 text-white"
+                            : getDaysRemaining(storefront.endDate) <= 1
+                              ? "bg-orange-500 text-white"
+                              : "bg-green-500 text-white"
+                        }
                       >
-                        <img
-                          src={editIcon}
-                          alt="แก้ไข"
-                          className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
-                        />
-                      </Button>
+                        {getDaysRemaining(storefront.endDate) > 0
+                          ? `สิ้นสุดใน ${getDaysRemaining(storefront.endDate)} วัน`
+                          : "สิ้นสุดแล้ว"}
+                      </Badge>
 
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
-                        onClick={() => {
-                          setStorefrontToDelete(storefront);
-                          setDeleteDialogOpen(true);
-                        }}
-                      >
-                        <img
-                          src={deleteIcon}
-                          alt="ลบ"
-                          className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
-                        />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
+                          onClick={() => {
+                            setStorefrontToEdit({ ...storefront });
+                            setEditDialogOpen(true);
+                          }}
+                        >
+                          <img
+                            src={editIcon}
+                            alt="แก้ไข"
+                            className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
+                          />
+                        </Button>
+
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="w-9 h-9 p-1 bg-white border flex items-center justify-center"
+                          onClick={() => {
+                            setStorefrontToDelete(storefront);
+                            setDeleteDialogOpen(true);
+                          }}
+                        >
+                          <img
+                            src={deleteIcon}
+                            alt="ลบ"
+                            className="w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] object-contain"
+                          />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </AccordionContent>
