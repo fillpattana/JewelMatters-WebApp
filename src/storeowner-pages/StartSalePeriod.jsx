@@ -50,8 +50,6 @@ import { Badge } from "@/components/ui/badge";
 import editIcon from "@/assets/edit-icon.png";
 import deleteIcon from "@/assets/delete-icon.png";
 
-//revert commit check
-
 const initialMockStorefronts = [
   {
     id: "sf1",
@@ -172,18 +170,7 @@ export default function StartSalePeriod() {
                     <span className="text-sm text-gray-500">
                       เริ่มขายเมื่อ {formatThaiDate(storefront.startDate)}
                     </span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="mt-4 flex flex-col gap-2">
-                    <div className="text-sm text-gray-700">
-                      <strong>จำนวนสินค้า:</strong> {storefront.totalItems}
-                    </div>
-                    <div className="text-sm text-gray-700">
-                      <strong>ยอดขายรวม:</strong>{" "}
-                      {storefront.totalSales.toLocaleString()} บาท
-                    </div>
-                    <div className="flex items-center justify-between mt-4">
+                    <span>
                       <Badge
                         variant="outline"
                         className={
@@ -198,7 +185,19 @@ export default function StartSalePeriod() {
                           ? `สิ้นสุดใน ${getDaysRemaining(storefront.endDate)} วัน`
                           : "สิ้นสุดแล้ว"}
                       </Badge>
-
+                    </span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="mt-4 flex flex-col gap-2">
+                    <div className="text-sm text-gray-700">
+                      <strong>จำนวนสินค้า:</strong> {storefront.totalItems}
+                    </div>
+                    <div className="text-sm text-gray-700">
+                      <strong>ยอดขายรวม:</strong>{" "}
+                      {storefront.totalSales.toLocaleString()} บาท
+                    </div>
+                    <div className="flex items-center justify-between mt-4">
                       <div className="flex gap-2">
                         <Button
                           variant="outline"
