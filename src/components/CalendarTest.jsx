@@ -10,31 +10,34 @@ import { format } from "date-fns";
 import { th } from "date-fns/locale";
 
 export default function CalendarTest() {
-  const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
-
-  const handleSelect = (selectedDate) => {
-    if (selectedDate) {
-      setDate(selectedDate);
-      setOpen(false); // Close popover only after a date is selected
-    }
-  };
-
+  // const [date, setDate] = useState(new Date());
+  // const [open, setOpen] = useState(false);
+  // const handleSelect = (selectedDate) => {
+  //   if (selectedDate) {
+  //     setDate(selectedDate);
+  //     setOpen(false); // Close popover only after a date is selected
+  //   }
+  // };
+  // return (
+  //   <Popover open={open} onOpenChange={setOpen}>
+  //     <PopoverTrigger asChild>
+  //       <Button variant="outline" onClick={() => setOpen(!open)}>
+  //         {format(date, "PPP", { locale: th })}
+  //       </Button>
+  //     </PopoverTrigger>
+  //     <PopoverContent className="w-auto p-0 z-50 bg-white">
+  //       <Calendar
+  //         mode="single"
+  //         selected={date}
+  //         onSelect={handleSelect}
+  //         initialFocus
+  //       />
+  //     </PopoverContent>
+  //   </Popover>
+  // );
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" onClick={() => setOpen(!open)}>
-          {format(date, "PPP", { locale: th })}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0 z-50 bg-white">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={handleSelect}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
+    <PopoverTrigger asChild>
+      <Button>Click</Button>
+    </PopoverTrigger>
   );
 }
