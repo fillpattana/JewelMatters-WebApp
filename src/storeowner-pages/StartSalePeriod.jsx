@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import CurrentStoreFrontList from "../components/CurrentStoreFrontList";
-import CreateStoreFront from "../components/CreateStoreFront";
 import EndedStorefrontHistory from "../components/EndedStoreFronts";
 
 export default function StartSalePeriod() {
