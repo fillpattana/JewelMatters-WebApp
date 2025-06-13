@@ -15,9 +15,6 @@ export default function StartSalePeriod() {
     <div className="space-y-8 p-4 pt-44">
       <h1 className="text-2xl font-bold">จัดการสาขา</h1>
       <CurrentStoreFrontList />
-      <div className="pt-4">
-        <CreateStoreFront onCreate={handleNewStorefront} />
-      </div>
       <EndedStorefrontHistory />
     </div>
   );
