@@ -346,7 +346,7 @@ export default function CurrentStoreFrontList() {
               </div>
 
               <div>
-                <Label>ช่วงวันที่ขาย</Label>
+                <Label className="block mb-1">ช่วงวันที่ขาย</Label>
                 <DatePicker
                   selected={
                     storefrontToEdit.startDate
@@ -374,8 +374,10 @@ export default function CurrentStoreFrontList() {
                   }
                   selectsRange
                   dateFormat="dd MMM yyyy"
-                  className="w-full border rounded px-2 py-1"
                   locale="th"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  calendarClassName="!z-[60]"
+                  wrapperClassName="w-full"
                 />
               </div>
             </div>
