@@ -53,8 +53,17 @@ export default function CalendarTest() {
           <PopoverTrigger asChild>
             <Button variant="outline">Open Popover</Button>
           </PopoverTrigger>
-          <PopoverContent className="bg-white border rounded-md p-4 shadow-md">
-            <p>Hello from Popover!</p>
+          <PopoverContent
+            style={{
+              position: "fixed",
+              top: "100px",
+              left: "100px",
+              transform: "none",
+              zIndex: 9999,
+            }}
+            className="bg-white border p-4"
+          >
+            <p>Can you see me now?</p>
           </PopoverContent>
         </Popover>
       </div>
