@@ -31,6 +31,7 @@ export default function CalendarTest() {
           selected={date}
           onSelect={handleSelect}
           initialFocus
+          zindex={9999}
         />
       </PopoverContent>
     </Popover>
