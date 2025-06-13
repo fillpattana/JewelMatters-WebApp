@@ -36,7 +36,6 @@
 //   </Popover>
 // );
 // }
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -54,13 +53,8 @@ export default function CalendarTest() {
             <Button variant="outline">Open Popover</Button>
           </PopoverTrigger>
           <PopoverContent
-            style={{
-              position: "fixed",
-              top: "100px",
-              left: "100px",
-              transform: "none",
-              zIndex: 9999,
-            }}
+            side="bottom"
+            align="center"
             className="bg-white border p-4"
           >
             <p>Can you see me now?</p>
