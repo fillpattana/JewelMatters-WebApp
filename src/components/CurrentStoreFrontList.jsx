@@ -22,14 +22,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import editIcon from "@/assets/edit-icon.png";
 import deleteIcon from "@/assets/delete-icon.png";
@@ -320,6 +316,7 @@ export default function CurrentStoreFrontList() {
                   }
                 />
               </div>
+
               <div>
                 <Label>จำนวนสินค้า</Label>
                 <Input
@@ -333,6 +330,7 @@ export default function CurrentStoreFrontList() {
                   }
                 />
               </div>
+
               <div>
                 <Label>ยอดขายรวม</Label>
                 <Input
@@ -347,74 +345,38 @@ export default function CurrentStoreFrontList() {
                 />
               </div>
 
-              {/* START DATE PICKER */}
               <div>
-                <Label>วันที่เริ่มต้น</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={`w-full justify-start text-left font-normal ${
-                        !storefrontToEdit.startDate
-                          ? "text-muted-foreground"
-                          : ""
-                      }`}
-                    >
-                      {storefrontToEdit.startDate
-                        ? format(new Date(storefrontToEdit.startDate), "PPP", {
-                            locale: th,
-                          })
-                        : "เลือกวันที่เริ่มต้น"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={new Date(storefrontToEdit.startDate)}
-                      onSelect={(date) =>
-                        setStorefrontToEdit({
-                          ...storefrontToEdit,
-                          startDate: date.toISOString(),
-                        })
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              {/* END DATE PICKER */}
-              <div>
-                <Label>วันที่สิ้นสุด</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={`w-full justify-start text-left font-normal ${
-                        !storefrontToEdit.endDate ? "text-muted-foreground" : ""
-                      }`}
-                    >
-                      {storefrontToEdit.endDate
-                        ? format(new Date(storefrontToEdit.endDate), "PPP", {
-                            locale: th,
-                          })
-                        : "เลือกวันที่สิ้นสุด"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={new Date(storefrontToEdit.endDate)}
-                      onSelect={(date) =>
-                        setStorefrontToEdit({
-                          ...storefrontToEdit,
-                          endDate: date.toISOString(),
-                        })
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <Label>ช่วงวันที่ขาย</Label>
+                <DatePicker
+                  selected={
+                    storefrontToEdit.startDate
+                      ? new Date(storefrontToEdit.startDate)
+                      : null
+                  }
+                  onChange={(dates) => {
+                    const [start, end] = dates;
+                    setStorefrontToEdit({
+                      ...storefrontToEdit,
+                      startDate:
+                        start?.toISOString() || storefrontToEdit.startDate,
+                      endDate: end?.toISOString() || storefrontToEdit.endDate,
+                    });
+                  }}
+                  startDate={
+                    storefrontToEdit.startDate
+                      ? new Date(storefrontToEdit.startDate)
+                      : null
+                  }
+                  endDate={
+                    storefrontToEdit.endDate
+                      ? new Date(storefrontToEdit.endDate)
+                      : null
+                  }
+                  selectsRange
+                  dateFormat="dd MMM yyyy"
+                  className="w-full border rounded px-2 py-1"
+                  locale="th"
+                />
               </div>
             </div>
             <AlertDialogFooter>
